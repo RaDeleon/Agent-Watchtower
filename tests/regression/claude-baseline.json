@@ -1,0 +1,1353 @@
+{
+  "resumed": {
+    "daily": [
+      {
+        "day": "2025-06-15",
+        "total_session_ms": 120000,
+        "active_ms": 120000,
+        "idle_ms": 0,
+        "sessions_count": 1,
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "tokens_cache_read": 0,
+        "tokens_cache_creation": 0,
+        "cache_hit_percentage": null,
+        "cost_usd": 0,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "prompts": 1,
+        "avg_context_pct": null,
+        "peak_context_pct": null,
+        "hygiene_score": 84.44444444444444
+      }
+    ],
+    "projects": [
+      {
+        "project_key": "(unfiled)",
+        "day": "2025-06-15",
+        "display_name": "(unfiled)",
+        "active_ms": 120000,
+        "window_ms": 120000,
+        "idle_ms": 0,
+        "sessions_count": 1,
+        "prompts": 1,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "tokens_cache_read": 0,
+        "tokens_cache_creation": 0,
+        "cost_usd": 0,
+        "peak_context_pct": null,
+        "avg_context_pct": null
+      }
+    ],
+    "rank": [
+      {
+        "total_hours": 0.03333333333333333,
+        "active_hours": 0.03333333333333333,
+        "lifetime_cost_usd": 0,
+        "lifetime_tokens_in": 0,
+        "lifetime_tokens_out": 0,
+        "sessions_count": 1,
+        "rank_index": 0,
+        "rank_name": "Noobie",
+        "hours_into_rank": 0.0333,
+        "hours_to_next": 19.9667,
+        "next_rank_name": "Apprentice",
+        "xp": 428,
+        "hygiene_score": 84.44444444444444
+      }
+    ]
+  },
+  "missing-stop": {
+    "daily": [
+      {
+        "day": "2025-06-15",
+        "total_session_ms": 10880000,
+        "active_ms": 370000,
+        "idle_ms": 10510000,
+        "sessions_count": 1,
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "tokens_cache_read": 0,
+        "tokens_cache_creation": 0,
+        "cache_hit_percentage": null,
+        "cost_usd": 0,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "prompts": 1,
+        "avg_context_pct": null,
+        "peak_context_pct": null,
+        "hygiene_score": 41.51143790849673
+      }
+    ],
+    "projects": [
+      {
+        "project_key": "(unfiled)",
+        "day": "2025-06-15",
+        "display_name": "(unfiled)",
+        "active_ms": 370000,
+        "window_ms": 10880000,
+        "idle_ms": 10510000,
+        "sessions_count": 1,
+        "prompts": 1,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "tokens_cache_read": 0,
+        "tokens_cache_creation": 0,
+        "cost_usd": 0,
+        "peak_context_pct": null,
+        "avg_context_pct": null
+      }
+    ],
+    "rank": [
+      {
+        "total_hours": 3.022222222222222,
+        "active_hours": 0.10277777777777777,
+        "lifetime_cost_usd": 0,
+        "lifetime_tokens_in": 0,
+        "lifetime_tokens_out": 0,
+        "sessions_count": 1,
+        "rank_index": 0,
+        "rank_name": "Noobie",
+        "hours_into_rank": 0.1028,
+        "hours_to_next": 19.8972,
+        "next_rank_name": "Apprentice",
+        "xp": 280,
+        "hygiene_score": 41.51143790849673
+      }
+    ]
+  },
+  "long-run": {
+    "daily": [
+      {
+        "day": "2025-06-15",
+        "total_session_ms": 1210000,
+        "active_ms": 1210000,
+        "idle_ms": 0,
+        "sessions_count": 1,
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "tokens_cache_read": 0,
+        "tokens_cache_creation": 0,
+        "cache_hit_percentage": null,
+        "cost_usd": 0,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "prompts": 1,
+        "avg_context_pct": null,
+        "peak_context_pct": null,
+        "hygiene_score": 84.44444444444444
+      }
+    ],
+    "projects": [
+      {
+        "project_key": "(unfiled)",
+        "day": "2025-06-15",
+        "display_name": "(unfiled)",
+        "active_ms": 1210000,
+        "window_ms": 1210000,
+        "idle_ms": 0,
+        "sessions_count": 1,
+        "prompts": 1,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "tokens_cache_read": 0,
+        "tokens_cache_creation": 0,
+        "cost_usd": 0,
+        "peak_context_pct": null,
+        "avg_context_pct": null
+      }
+    ],
+    "rank": [
+      {
+        "total_hours": 0.33611111111111114,
+        "active_hours": 0.33611111111111114,
+        "lifetime_cost_usd": 0,
+        "lifetime_tokens_in": 0,
+        "lifetime_tokens_out": 0,
+        "sessions_count": 1,
+        "rank_index": 0,
+        "rank_name": "Noobie",
+        "hours_into_rank": 0.3361,
+        "hours_to_next": 19.6639,
+        "next_rank_name": "Apprentice",
+        "xp": 465,
+        "hygiene_score": 84.44444444444444
+      }
+    ]
+  },
+  "work-cap": {
+    "daily": [
+      {
+        "day": "2025-06-15",
+        "total_session_ms": 14410000,
+        "active_ms": 14410000,
+        "idle_ms": 0,
+        "sessions_count": 1,
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "tokens_cache_read": 0,
+        "tokens_cache_creation": 0,
+        "cache_hit_percentage": null,
+        "cost_usd": 0,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "prompts": 1,
+        "avg_context_pct": null,
+        "peak_context_pct": null,
+        "hygiene_score": 84.44444444444444
+      }
+    ],
+    "projects": [
+      {
+        "project_key": "(unfiled)",
+        "day": "2025-06-15",
+        "display_name": "(unfiled)",
+        "active_ms": 14410000,
+        "window_ms": 14410000,
+        "idle_ms": 0,
+        "sessions_count": 1,
+        "prompts": 1,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "tokens_cache_read": 0,
+        "tokens_cache_creation": 0,
+        "cost_usd": 0,
+        "peak_context_pct": null,
+        "avg_context_pct": null
+      }
+    ],
+    "rank": [
+      {
+        "total_hours": 4.002777777777778,
+        "active_hours": 4.002777777777778,
+        "lifetime_cost_usd": 0,
+        "lifetime_tokens_in": 0,
+        "lifetime_tokens_out": 0,
+        "sessions_count": 1,
+        "rank_index": 0,
+        "rank_name": "Noobie",
+        "hours_into_rank": 4.0028,
+        "hours_to_next": 15.9972,
+        "next_rank_name": "Apprentice",
+        "xp": 905,
+        "hygiene_score": 84.44444444444444
+      }
+    ]
+  },
+  "dup-snapshot": {
+    "daily": [
+      {
+        "day": "2025-06-15",
+        "total_session_ms": 1210000,
+        "active_ms": 1210000,
+        "idle_ms": 0,
+        "sessions_count": 1,
+        "tokens_in": 7,
+        "tokens_out": 333,
+        "tokens_cache_read": 900,
+        "tokens_cache_creation": 100,
+        "cache_hit_percentage": 90,
+        "cost_usd": 1.5,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "prompts": 1,
+        "avg_context_pct": 10,
+        "peak_context_pct": 10,
+        "hygiene_score": 90.5
+      }
+    ],
+    "projects": [
+      {
+        "project_key": "(unfiled)",
+        "day": "2025-06-15",
+        "display_name": "(unfiled)",
+        "active_ms": 1210000,
+        "window_ms": 1210000,
+        "idle_ms": 0,
+        "sessions_count": 1,
+        "prompts": 1,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "tokens_in": 7,
+        "tokens_out": 333,
+        "tokens_cache_read": 900,
+        "tokens_cache_creation": 100,
+        "cost_usd": 1.5,
+        "peak_context_pct": 10,
+        "avg_context_pct": 10
+      }
+    ],
+    "rank": [
+      {
+        "total_hours": 0.33611111111111114,
+        "active_hours": 0.33611111111111114,
+        "lifetime_cost_usd": 1.5,
+        "lifetime_tokens_in": 7,
+        "lifetime_tokens_out": 333,
+        "sessions_count": 1,
+        "rank_index": 0,
+        "rank_name": "Noobie",
+        "hours_into_rank": 0.3361,
+        "hours_to_next": 19.6639,
+        "next_rank_name": "Apprentice",
+        "xp": 495,
+        "hygiene_score": 90.5
+      }
+    ]
+  },
+  "two-sessions-day": {
+    "daily": [
+      {
+        "day": "2025-06-15",
+        "total_session_ms": 1820000,
+        "active_ms": 1820000,
+        "idle_ms": 0,
+        "sessions_count": 2,
+        "tokens_in": 14,
+        "tokens_out": 3000,
+        "tokens_cache_read": 1800,
+        "tokens_cache_creation": 200,
+        "cache_hit_percentage": 90,
+        "cost_usd": 2,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "prompts": 2,
+        "avg_context_pct": 10,
+        "peak_context_pct": 10,
+        "hygiene_score": 90.5
+      }
+    ],
+    "projects": [
+      {
+        "project_key": "(unfiled)",
+        "day": "2025-06-15",
+        "display_name": "(unfiled)",
+        "active_ms": 1820000,
+        "window_ms": 1820000,
+        "idle_ms": 0,
+        "sessions_count": 2,
+        "prompts": 2,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "tokens_in": 14,
+        "tokens_out": 3000,
+        "tokens_cache_read": 1800,
+        "tokens_cache_creation": 200,
+        "cost_usd": 2,
+        "peak_context_pct": 10,
+        "avg_context_pct": 10
+      }
+    ],
+    "rank": [
+      {
+        "total_hours": 0.5055555555555555,
+        "active_hours": 0.5055555555555555,
+        "lifetime_cost_usd": 2,
+        "lifetime_tokens_in": 14,
+        "lifetime_tokens_out": 3000,
+        "sessions_count": 2,
+        "rank_index": 0,
+        "rank_name": "Noobie",
+        "hours_into_rank": 0.5056,
+        "hours_to_next": 19.4944,
+        "next_rank_name": "Apprentice",
+        "xp": 517,
+        "hygiene_score": 90.5
+      }
+    ]
+  },
+  "crosses-midnight": {
+    "daily": [
+      {
+        "day": "2025-06-15",
+        "total_session_ms": 1210000,
+        "active_ms": 1210000,
+        "idle_ms": 0,
+        "sessions_count": 1,
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "tokens_cache_read": 0,
+        "tokens_cache_creation": 0,
+        "cache_hit_percentage": null,
+        "cost_usd": 1.5,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "prompts": 1,
+        "avg_context_pct": 10,
+        "peak_context_pct": 10,
+        "hygiene_score": 90.66666666666666
+      }
+    ],
+    "projects": [
+      {
+        "project_key": "(unfiled)",
+        "day": "2025-06-15",
+        "display_name": "(unfiled)",
+        "active_ms": 1210000,
+        "window_ms": 1210000,
+        "idle_ms": 0,
+        "sessions_count": 1,
+        "prompts": 1,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "tokens_cache_read": 0,
+        "tokens_cache_creation": 0,
+        "cost_usd": 1.5,
+        "peak_context_pct": 10,
+        "avg_context_pct": 10
+      }
+    ],
+    "rank": [
+      {
+        "total_hours": 0.33611111111111114,
+        "active_hours": 0.33611111111111114,
+        "lifetime_cost_usd": 1.5,
+        "lifetime_tokens_in": 0,
+        "lifetime_tokens_out": 0,
+        "sessions_count": 1,
+        "rank_index": 0,
+        "rank_name": "Noobie",
+        "hours_into_rank": 0.3361,
+        "hours_to_next": 19.6639,
+        "next_rank_name": "Apprentice",
+        "xp": 496,
+        "hygiene_score": 90.66666666666666
+      }
+    ]
+  },
+  "four-projects": {
+    "daily": [
+      {
+        "day": "2025-06-15",
+        "total_session_ms": 3040000,
+        "active_ms": 3040000,
+        "idle_ms": 0,
+        "sessions_count": 4,
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "tokens_cache_read": 0,
+        "tokens_cache_creation": 0,
+        "cache_hit_percentage": null,
+        "cost_usd": 0,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "prompts": 4,
+        "avg_context_pct": null,
+        "peak_context_pct": null,
+        "hygiene_score": 84.44444444444444
+      }
+    ],
+    "projects": [
+      {
+        "project_key": "(unfiled)",
+        "day": "2025-06-15",
+        "display_name": "(unfiled)",
+        "active_ms": 1220000,
+        "window_ms": 1220000,
+        "idle_ms": 0,
+        "sessions_count": 2,
+        "prompts": 2,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "tokens_cache_read": 0,
+        "tokens_cache_creation": 0,
+        "cost_usd": 0,
+        "peak_context_pct": null,
+        "avg_context_pct": null
+      },
+      {
+        "project_key": "<FXDIR>/tree/space dir/repo-a",
+        "day": "2025-06-15",
+        "display_name": "repo-a",
+        "active_ms": 1820000,
+        "window_ms": 1820000,
+        "idle_ms": 0,
+        "sessions_count": 2,
+        "prompts": 2,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "tokens_cache_read": 0,
+        "tokens_cache_creation": 0,
+        "cost_usd": 0,
+        "peak_context_pct": null,
+        "avg_context_pct": null
+      }
+    ],
+    "rank": [
+      {
+        "total_hours": 0.8444444444444444,
+        "active_hours": 0.8444444444444444,
+        "lifetime_cost_usd": 0,
+        "lifetime_tokens_in": 0,
+        "lifetime_tokens_out": 0,
+        "sessions_count": 4,
+        "rank_index": 0,
+        "rank_name": "Noobie",
+        "hours_into_rank": 0.8444,
+        "hours_to_next": 19.1556,
+        "next_rank_name": "Apprentice",
+        "xp": 532,
+        "hygiene_score": 84.44444444444444
+      }
+    ]
+  },
+  "mixed-projects-one-day": {
+    "daily": [
+      {
+        "day": "2025-06-15",
+        "total_session_ms": 2440000,
+        "active_ms": 2440000,
+        "idle_ms": 0,
+        "sessions_count": 5,
+        "tokens_in": 106,
+        "tokens_out": 14812,
+        "tokens_cache_read": 1740,
+        "tokens_cache_creation": 126,
+        "cache_hit_percentage": 93.2475884244373,
+        "cost_usd": 6,
+        "compacts": 3,
+        "clears": 1,
+        "subagents": 8,
+        "prompts": 5,
+        "avg_context_pct": 10,
+        "peak_context_pct": 10,
+        "hygiene_score": 92.06189710610933
+      }
+    ],
+    "projects": [
+      {
+        "project_key": "(unfiled)",
+        "day": "2025-06-15",
+        "display_name": "(unfiled)",
+        "active_ms": 1220000,
+        "window_ms": 1220000,
+        "idle_ms": 0,
+        "sessions_count": 3,
+        "prompts": 3,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "tokens_in": 72,
+        "tokens_out": 10608,
+        "tokens_cache_read": 1240,
+        "tokens_cache_creation": 80,
+        "cost_usd": 3,
+        "peak_context_pct": 10,
+        "avg_context_pct": 10
+      },
+      {
+        "project_key": "<FXDIR>/tree/proj-one",
+        "day": "2025-06-15",
+        "display_name": "proj-one",
+        "active_ms": 610000,
+        "window_ms": 610000,
+        "idle_ms": 0,
+        "sessions_count": 1,
+        "prompts": 1,
+        "compacts": 2,
+        "clears": 1,
+        "subagents": 3,
+        "tokens_in": 11,
+        "tokens_out": 1301,
+        "tokens_cache_read": 130,
+        "tokens_cache_creation": 17,
+        "cost_usd": 1.5,
+        "peak_context_pct": 10,
+        "avg_context_pct": 10
+      },
+      {
+        "project_key": "<FXDIR>/tree/proj-two",
+        "day": "2025-06-15",
+        "display_name": "proj-two",
+        "active_ms": 610000,
+        "window_ms": 610000,
+        "idle_ms": 0,
+        "sessions_count": 1,
+        "prompts": 1,
+        "compacts": 1,
+        "clears": 0,
+        "subagents": 5,
+        "tokens_in": 23,
+        "tokens_out": 2903,
+        "tokens_cache_read": 370,
+        "tokens_cache_creation": 29,
+        "cost_usd": 1.5,
+        "peak_context_pct": 10,
+        "avg_context_pct": 10
+      }
+    ],
+    "rank": [
+      {
+        "total_hours": 0.6777777777777778,
+        "active_hours": 0.6777777777777778,
+        "lifetime_cost_usd": 6,
+        "lifetime_tokens_in": 106,
+        "lifetime_tokens_out": 14812,
+        "sessions_count": 5,
+        "rank_index": 0,
+        "rank_name": "Noobie",
+        "hours_into_rank": 0.6778,
+        "hours_to_next": 19.3222,
+        "next_rank_name": "Apprentice",
+        "xp": 552,
+        "hygiene_score": 92.06189710610933
+      }
+    ]
+  },
+  "session-spans-two-projects": {
+    "daily": [
+      {
+        "day": "2025-06-15",
+        "total_session_ms": 2410000,
+        "active_ms": 1710000,
+        "idle_ms": 700000,
+        "sessions_count": 1,
+        "tokens_in": 34,
+        "tokens_out": 4204,
+        "tokens_cache_read": 500,
+        "tokens_cache_creation": 46,
+        "cache_hit_percentage": 91.57509157509158,
+        "cost_usd": 1.5,
+        "compacts": 2,
+        "clears": 1,
+        "subagents": 3,
+        "prompts": 1,
+        "avg_context_pct": 10,
+        "peak_context_pct": 10,
+        "hygiene_score": 83.75131092973416
+      }
+    ],
+    "projects": [
+      {
+        "project_key": "<FXDIR>/tree/proj-one",
+        "day": "2025-06-15",
+        "display_name": "proj-one",
+        "active_ms": 1210000,
+        "window_ms": 1210000,
+        "idle_ms": 0,
+        "sessions_count": 1,
+        "prompts": 1,
+        "compacts": 2,
+        "clears": 1,
+        "subagents": 3,
+        "tokens_in": 11,
+        "tokens_out": 1301,
+        "tokens_cache_read": 130,
+        "tokens_cache_creation": 17,
+        "cost_usd": 1.5,
+        "peak_context_pct": 10,
+        "avg_context_pct": 10
+      },
+      {
+        "project_key": "<FXDIR>/tree/proj-two",
+        "day": "2025-06-15",
+        "display_name": "proj-two",
+        "active_ms": 500000,
+        "window_ms": 1200000,
+        "idle_ms": 700000,
+        "sessions_count": 0,
+        "prompts": 0,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "tokens_in": 23,
+        "tokens_out": 2903,
+        "tokens_cache_read": 370,
+        "tokens_cache_creation": 29,
+        "cost_usd": 0,
+        "peak_context_pct": null,
+        "avg_context_pct": null
+      }
+    ],
+    "rank": [
+      {
+        "total_hours": 0.6694444444444444,
+        "active_hours": 0.475,
+        "lifetime_cost_usd": 1.5,
+        "lifetime_tokens_in": 34,
+        "lifetime_tokens_out": 4204,
+        "sessions_count": 1,
+        "rank_index": 0,
+        "rank_name": "Noobie",
+        "hours_into_rank": 0.475,
+        "hours_to_next": 19.525,
+        "next_rank_name": "Apprentice",
+        "xp": 482,
+        "hygiene_score": 83.75131092973416
+      }
+    ]
+  },
+  "recent-and-old-projects": {
+    "daily": [
+      {
+        "day": "<TODAY-120>",
+        "total_session_ms": 610000,
+        "active_ms": 610000,
+        "idle_ms": 0,
+        "sessions_count": 1,
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "tokens_cache_read": 0,
+        "tokens_cache_creation": 0,
+        "cache_hit_percentage": null,
+        "cost_usd": 1.5,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "prompts": 1,
+        "avg_context_pct": 10,
+        "peak_context_pct": 10,
+        "hygiene_score": 90.66666666666666
+      },
+      {
+        "day": "<TODAY-3>",
+        "total_session_ms": 610000,
+        "active_ms": 610000,
+        "idle_ms": 0,
+        "sessions_count": 1,
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "tokens_cache_read": 0,
+        "tokens_cache_creation": 0,
+        "cache_hit_percentage": null,
+        "cost_usd": 1.5,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "prompts": 1,
+        "avg_context_pct": 10,
+        "peak_context_pct": 10,
+        "hygiene_score": 90.66666666666666
+      }
+    ],
+    "projects": [
+      {
+        "project_key": "<FXDIR>/tree/proj-old",
+        "day": "<TODAY-120>",
+        "display_name": "proj-old",
+        "active_ms": 610000,
+        "window_ms": 610000,
+        "idle_ms": 0,
+        "sessions_count": 1,
+        "prompts": 1,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "tokens_cache_read": 0,
+        "tokens_cache_creation": 0,
+        "cost_usd": 1.5,
+        "peak_context_pct": 10,
+        "avg_context_pct": 10
+      },
+      {
+        "project_key": "<FXDIR>/tree/proj-recent",
+        "day": "<TODAY-3>",
+        "display_name": "proj-recent",
+        "active_ms": 610000,
+        "window_ms": 610000,
+        "idle_ms": 0,
+        "sessions_count": 1,
+        "prompts": 1,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "tokens_cache_read": 0,
+        "tokens_cache_creation": 0,
+        "cost_usd": 1.5,
+        "peak_context_pct": 10,
+        "avg_context_pct": 10
+      }
+    ],
+    "rank": [
+      {
+        "total_hours": 0.3388888888888889,
+        "active_hours": 0.3388888888888889,
+        "lifetime_cost_usd": 3,
+        "lifetime_tokens_in": 0,
+        "lifetime_tokens_out": 0,
+        "sessions_count": 2,
+        "rank_index": 0,
+        "rank_name": "Noobie",
+        "hours_into_rank": 0.3389,
+        "hours_to_next": 19.6611,
+        "next_rank_name": "Apprentice",
+        "xp": 498,
+        "hygiene_score": 90.66666666666666
+      }
+    ]
+  },
+  "orphan-request-tokens": {
+    "daily": [
+      {
+        "day": "2025-06-15",
+        "total_session_ms": 600000,
+        "active_ms": 300000,
+        "idle_ms": 300000,
+        "sessions_count": 1,
+        "tokens_in": 14,
+        "tokens_out": 1500,
+        "tokens_cache_read": 1800,
+        "tokens_cache_creation": 200,
+        "cache_hit_percentage": 90,
+        "cost_usd": 0.5,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "prompts": 1,
+        "avg_context_pct": 10,
+        "peak_context_pct": 10,
+        "hygiene_score": 80.5
+      }
+    ],
+    "projects": [
+      {
+        "project_key": "(unfiled)",
+        "day": "2025-06-15",
+        "display_name": "(unfiled)",
+        "active_ms": 300000,
+        "window_ms": 600000,
+        "idle_ms": 300000,
+        "sessions_count": 1,
+        "prompts": 1,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "tokens_in": 14,
+        "tokens_out": 1500,
+        "tokens_cache_read": 1800,
+        "tokens_cache_creation": 200,
+        "cost_usd": 0.5,
+        "peak_context_pct": 10,
+        "avg_context_pct": 10
+      }
+    ],
+    "rank": [
+      {
+        "total_hours": 0.16666666666666666,
+        "active_hours": 0.08333333333333333,
+        "lifetime_cost_usd": 0.5,
+        "lifetime_tokens_in": 14,
+        "lifetime_tokens_out": 1500,
+        "sessions_count": 1,
+        "rank_index": 0,
+        "rank_name": "Noobie",
+        "hours_into_rank": 0.0833,
+        "hours_to_next": 19.9167,
+        "next_rank_name": "Apprentice",
+        "xp": 416,
+        "hygiene_score": 80.5
+      }
+    ]
+  },
+  "request-only-projects": {
+    "daily": [
+      {
+        "day": "2025-06-15",
+        "total_session_ms": 610000,
+        "active_ms": 610000,
+        "idle_ms": 0,
+        "sessions_count": 1,
+        "tokens_in": 78,
+        "tokens_out": 9618,
+        "tokens_cache_read": 1200,
+        "tokens_cache_creation": 102,
+        "cache_hit_percentage": 92.16589861751152,
+        "cost_usd": 1.5,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "prompts": 1,
+        "avg_context_pct": 10,
+        "peak_context_pct": 10,
+        "hygiene_score": 91.04147465437788
+      }
+    ],
+    "projects": [
+      {
+        "project_key": "(unfiled)",
+        "day": "2025-06-15",
+        "display_name": "(unfiled)",
+        "active_ms": 0,
+        "window_ms": 0,
+        "idle_ms": 0,
+        "sessions_count": 0,
+        "prompts": 0,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "tokens_in": 31,
+        "tokens_out": 4507,
+        "tokens_cache_read": 510,
+        "tokens_cache_creation": 37,
+        "cost_usd": 0,
+        "peak_context_pct": null,
+        "avg_context_pct": null
+      },
+      {
+        "project_key": "<FXDIR>/tree/proj-alpha",
+        "day": "2025-06-15",
+        "display_name": "proj-alpha",
+        "active_ms": 610000,
+        "window_ms": 610000,
+        "idle_ms": 0,
+        "sessions_count": 1,
+        "prompts": 1,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "tokens_in": 24,
+        "tokens_out": 2208,
+        "tokens_cache_read": 320,
+        "tokens_cache_creation": 36,
+        "cost_usd": 1.5,
+        "peak_context_pct": 10,
+        "avg_context_pct": 10
+      },
+      {
+        "project_key": "<FXDIR>/tree/proj-beta",
+        "day": "2025-06-15",
+        "display_name": "proj-beta",
+        "active_ms": 0,
+        "window_ms": 0,
+        "idle_ms": 0,
+        "sessions_count": 0,
+        "prompts": 0,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "tokens_in": 23,
+        "tokens_out": 2903,
+        "tokens_cache_read": 370,
+        "tokens_cache_creation": 29,
+        "cost_usd": 0,
+        "peak_context_pct": null,
+        "avg_context_pct": null
+      }
+    ],
+    "rank": [
+      {
+        "total_hours": 0.16944444444444445,
+        "active_hours": 0.16944444444444445,
+        "lifetime_cost_usd": 1.5,
+        "lifetime_tokens_in": 78,
+        "lifetime_tokens_out": 9618,
+        "sessions_count": 1,
+        "rank_index": 0,
+        "rank_name": "Noobie",
+        "hours_into_rank": 0.1694,
+        "hours_to_next": 19.8306,
+        "next_rank_name": "Apprentice",
+        "xp": 478,
+        "hygiene_score": 91.04147465437788
+      }
+    ]
+  },
+  "partial-transcript-coverage": {
+    "daily": [
+      {
+        "day": "2025-06-15",
+        "total_session_ms": 610000,
+        "active_ms": 610000,
+        "idle_ms": 0,
+        "sessions_count": 1,
+        "tokens_in": 11,
+        "tokens_out": 1000,
+        "tokens_cache_read": 900,
+        "tokens_cache_creation": 100,
+        "cache_hit_percentage": 90,
+        "cost_usd": 1.5,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "prompts": 1,
+        "avg_context_pct": 10,
+        "peak_context_pct": 10,
+        "hygiene_score": 90.5
+      },
+      {
+        "day": "2025-06-16",
+        "total_session_ms": 610000,
+        "active_ms": 610000,
+        "idle_ms": 0,
+        "sessions_count": 1,
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "tokens_cache_read": 0,
+        "tokens_cache_creation": 0,
+        "cache_hit_percentage": null,
+        "cost_usd": 1.5,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "prompts": 1,
+        "avg_context_pct": 10,
+        "peak_context_pct": 10,
+        "hygiene_score": 90.66666666666666
+      }
+    ],
+    "projects": [
+      {
+        "project_key": "(unfiled)",
+        "day": "2025-06-15",
+        "display_name": "(unfiled)",
+        "active_ms": 610000,
+        "window_ms": 610000,
+        "idle_ms": 0,
+        "sessions_count": 1,
+        "prompts": 1,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "tokens_in": 11,
+        "tokens_out": 1000,
+        "tokens_cache_read": 900,
+        "tokens_cache_creation": 100,
+        "cost_usd": 1.5,
+        "peak_context_pct": 10,
+        "avg_context_pct": 10
+      },
+      {
+        "project_key": "(unfiled)",
+        "day": "2025-06-16",
+        "display_name": "(unfiled)",
+        "active_ms": 610000,
+        "window_ms": 610000,
+        "idle_ms": 0,
+        "sessions_count": 1,
+        "prompts": 1,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "tokens_cache_read": 0,
+        "tokens_cache_creation": 0,
+        "cost_usd": 1.5,
+        "peak_context_pct": 10,
+        "avg_context_pct": 10
+      }
+    ],
+    "rank": [
+      {
+        "total_hours": 0.3388888888888889,
+        "active_hours": 0.3388888888888889,
+        "lifetime_cost_usd": 3,
+        "lifetime_tokens_in": 11,
+        "lifetime_tokens_out": 1000,
+        "sessions_count": 2,
+        "rank_index": 0,
+        "rank_name": "Noobie",
+        "hours_into_rank": 0.3389,
+        "hours_to_next": 19.6611,
+        "next_rank_name": "Apprentice",
+        "xp": 498,
+        "hygiene_score": 90.58333333333333
+      }
+    ]
+  },
+  "zero-window-no-coverage": {
+    "daily": [
+      {
+        "day": "2025-06-15",
+        "total_session_ms": 610000,
+        "active_ms": 610000,
+        "idle_ms": 0,
+        "sessions_count": 1,
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "tokens_cache_read": 0,
+        "tokens_cache_creation": 0,
+        "cache_hit_percentage": null,
+        "cost_usd": 0,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "prompts": 1,
+        "avg_context_pct": null,
+        "peak_context_pct": null,
+        "hygiene_score": 84.44444444444444
+      },
+      {
+        "day": "2025-06-16",
+        "total_session_ms": 0,
+        "active_ms": 0,
+        "idle_ms": 0,
+        "sessions_count": 1,
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "tokens_cache_read": 0,
+        "tokens_cache_creation": 0,
+        "cache_hit_percentage": null,
+        "cost_usd": 0,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "prompts": 1,
+        "avg_context_pct": null,
+        "peak_context_pct": null,
+        "hygiene_score": 80
+      }
+    ],
+    "projects": [
+      {
+        "project_key": "(unfiled)",
+        "day": "2025-06-15",
+        "display_name": "(unfiled)",
+        "active_ms": 610000,
+        "window_ms": 610000,
+        "idle_ms": 0,
+        "sessions_count": 1,
+        "prompts": 1,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "tokens_cache_read": 0,
+        "tokens_cache_creation": 0,
+        "cost_usd": 0,
+        "peak_context_pct": null,
+        "avg_context_pct": null
+      },
+      {
+        "project_key": "(unfiled)",
+        "day": "2025-06-16",
+        "display_name": "(unfiled)",
+        "active_ms": 0,
+        "window_ms": 0,
+        "idle_ms": 0,
+        "sessions_count": 1,
+        "prompts": 1,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "tokens_cache_read": 0,
+        "tokens_cache_creation": 0,
+        "cost_usd": 0,
+        "peak_context_pct": null,
+        "avg_context_pct": null
+      }
+    ],
+    "rank": [
+      {
+        "total_hours": 0.16944444444444445,
+        "active_hours": 0.16944444444444445,
+        "lifetime_cost_usd": 0,
+        "lifetime_tokens_in": 0,
+        "lifetime_tokens_out": 0,
+        "sessions_count": 2,
+        "rank_index": 0,
+        "rank_name": "Noobie",
+        "hours_into_rank": 0.1694,
+        "hours_to_next": 19.8306,
+        "next_rank_name": "Apprentice",
+        "xp": 435,
+        "hygiene_score": 82.22222222222223
+      }
+    ]
+  },
+  "null-cwd-request": {
+    "daily": [
+      {
+        "day": "2025-06-15",
+        "total_session_ms": 600000,
+        "active_ms": 300000,
+        "idle_ms": 300000,
+        "sessions_count": 1,
+        "tokens_in": 65,
+        "tokens_out": 7000,
+        "tokens_cache_read": 1010,
+        "tokens_cache_creation": 83,
+        "cache_hit_percentage": 92.40622140896615,
+        "cost_usd": 0,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "prompts": 1,
+        "avg_context_pct": null,
+        "peak_context_pct": null,
+        "hygiene_score": 73.00222193177362
+      }
+    ],
+    "projects": [
+      {
+        "project_key": "(unfiled)",
+        "day": "2025-06-15",
+        "display_name": "(unfiled)",
+        "active_ms": 300000,
+        "window_ms": 600000,
+        "idle_ms": 300000,
+        "sessions_count": 1,
+        "prompts": 1,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "tokens_in": 65,
+        "tokens_out": 7000,
+        "tokens_cache_read": 1010,
+        "tokens_cache_creation": 83,
+        "cost_usd": 0,
+        "peak_context_pct": null,
+        "avg_context_pct": null
+      }
+    ],
+    "rank": [
+      {
+        "total_hours": 0.16666666666666666,
+        "active_hours": 0.08333333333333333,
+        "lifetime_cost_usd": 0,
+        "lifetime_tokens_in": 65,
+        "lifetime_tokens_out": 7000,
+        "sessions_count": 1,
+        "rank_index": 0,
+        "rank_name": "Noobie",
+        "hours_into_rank": 0.0833,
+        "hours_to_next": 19.9167,
+        "next_rank_name": "Apprentice",
+        "xp": 379,
+        "hygiene_score": 73.00222193177362
+      }
+    ]
+  },
+  "tokens-only-day": {
+    "daily": [
+      {
+        "day": "2025-06-15",
+        "total_session_ms": 0,
+        "active_ms": 0,
+        "idle_ms": 0,
+        "sessions_count": 1,
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "tokens_cache_read": 0,
+        "tokens_cache_creation": 0,
+        "cache_hit_percentage": null,
+        "cost_usd": 0,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "prompts": 1,
+        "avg_context_pct": null,
+        "peak_context_pct": null,
+        "hygiene_score": 80
+      },
+      {
+        "day": "2025-06-18",
+        "total_session_ms": 0,
+        "active_ms": 0,
+        "idle_ms": 0,
+        "sessions_count": 0,
+        "tokens_in": 7,
+        "tokens_out": 4242,
+        "tokens_cache_read": 900,
+        "tokens_cache_creation": 100,
+        "cache_hit_percentage": 90,
+        "cost_usd": 0,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "prompts": 0,
+        "avg_context_pct": null,
+        "peak_context_pct": null,
+        "hygiene_score": 0
+      }
+    ],
+    "projects": [
+      {
+        "project_key": "(unfiled)",
+        "day": "2025-06-15",
+        "display_name": "(unfiled)",
+        "active_ms": 0,
+        "window_ms": 0,
+        "idle_ms": 0,
+        "sessions_count": 1,
+        "prompts": 1,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "tokens_cache_read": 0,
+        "tokens_cache_creation": 0,
+        "cost_usd": 0,
+        "peak_context_pct": null,
+        "avg_context_pct": null
+      },
+      {
+        "project_key": "(unfiled)",
+        "day": "2025-06-18",
+        "display_name": "(unfiled)",
+        "active_ms": 0,
+        "window_ms": 0,
+        "idle_ms": 0,
+        "sessions_count": 0,
+        "prompts": 0,
+        "compacts": 0,
+        "clears": 0,
+        "subagents": 0,
+        "tokens_in": 7,
+        "tokens_out": 4242,
+        "tokens_cache_read": 900,
+        "tokens_cache_creation": 100,
+        "cost_usd": 0,
+        "peak_context_pct": null,
+        "avg_context_pct": null
+      }
+    ],
+    "rank": [
+      {
+        "total_hours": 0,
+        "active_hours": 0,
+        "lifetime_cost_usd": 0,
+        "lifetime_tokens_in": 7,
+        "lifetime_tokens_out": 4242,
+        "sessions_count": 1,
+        "rank_index": 0,
+        "rank_name": "Noobie",
+        "hours_into_rank": 0,
+        "hours_to_next": 20,
+        "next_rank_name": "Apprentice",
+        "xp": 402,
+        "hygiene_score": 80
+      }
+    ]
+  }
+}

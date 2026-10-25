@@ -1,0 +1,25 @@
+{
+  "name": "agent-watchtower",
+  "version": "1.0.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "bin": {
+    "watchtower": "bin/watchtower"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "check:secrets": "node script/check-secrets.ts --history",
+    "lint": "node script/lint.ts",
+    "release": "node script/release.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
+  }
+}

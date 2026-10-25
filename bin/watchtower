@@ -1,0 +1,260 @@
+#!/usr/bin/env node
+// Watchtower CLI. Zero dependencies.
+//
+// Usage:
+//   watchtower [open] [--port <n>]
+//   watchtower stop [--port <n>]
+//   watchtower serve [--port <n>]
+//   watchtower report [--out <file>|-]
+//   watchtower sync [--quiet] [--no-rollup]   project every enabled source, then run the installed rollup
+//   watchtower ingest --stdin --source <id>
+//   watchtower setup [--yes] [--[no-]status-line|backfill|link|open] [--disable <id,…>]
+//
+// A bare `watchtower` is `watchtower open`: it opens the dashboard in the
+// browser, starting `serve` detached in the background if nothing is serving
+// the port yet, and gives the terminal back. `watchtower stop` stops it. Both
+// live in lib/launch.ts; this file only dispatches.
+//
+// Runs TypeScript with no build step: Node strips types natively, which needs
+// the explicit .ts extension on the import below (tsconfig sets
+// allowImportingTsExtensions to match). There is no dist/ and no bundler, so
+// this file must not use the "@/" path alias -- that is a tsconfig/vitest
+// alias, and Node would try to resolve it as a package.
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+
+const argv = process.argv.slice(2);
+const cmd = argv[0];
+
+const USAGE = [
+  "usage: watchtower [open] [--port <n>]       open the dashboard in a browser, starting it in the background if needed",
+  "       watchtower stop [--port <n>]         stop the background dashboard",
+  "       watchtower serve [--port <n>]        run the dashboard in this terminal (also syncs every dashboard.syncSeconds)",
+  "       watchtower report [--out <file>|-]   (default ./watchtower-report.html; replaces an existing file)",
+  "       watchtower sync [--quiet] [--no-rollup]   projects every enabled source, then runs the installed rollup",
+  "       watchtower ingest --stdin --source <id>",
+  "       watchtower setup [--yes] [--[no-]status-line|backfill|link|open] [--disable <id,…>]   install capture and set up, asking first",
+].join("\n");
+
+function fail(message) {
+  console.error(message);
+  process.exit(2);
+}
+
+/**
+ * One line out of a failed child process, for a human.
+ *
+ * execFileSync's `message` is "Command failed: " followed by the ENTIRE
+ * statement, which for applyWtSchema is the whole wt_* DDL -- a hundred lines
+ * of noise wrapped around one sentence from sqlite3. The sentence is in
+ * `stderr`, so prefer it and fall back to the first line of the message.
+ */
+function briefly(e) {
+  const stderr = e && e.stderr ? String(e.stderr).trim() : "";
+  if (stderr !== "") {
+    const lines = stderr.split("\n").filter((l) => l.trim() !== "");
+    return lines[lines.length - 1];
+  }
+  const message = e && e.message ? String(e.message) : String(e);
+  return message.split("\n")[0];
+}
+
+/**
+ * Read a flag. `--name value` yields the value; `--name` followed by another
+ * flag (or nothing) yields true, so a value-less switch reads as present.
+ */
+function flag(name) {
+  const eq = argv.find((a) => a.startsWith(`--${name}=`));
+  if (eq !== undefined) return eq.slice(name.length + 3);
+  const i = argv.indexOf(`--${name}`);
+  if (i === -1) return undefined;
+  const next = argv[i + 1];
+  return next === undefined || next.startsWith("--") ? true : next;
+}
+
+/**
+ * The dashboard port: --port, else dashboard.port from config. `min` is 1 for
+ * open and stop, which must find the server by its port, and 0 for serve,
+ * where 0 asks the OS for any free one.
+ */
+function dashboardPort(cfg, min) {
+  const portFlag = flag("port");
+  const port = portFlag === undefined || portFlag === true ? cfg.dashboard.port : Number(portFlag);
+  if (!Number.isInteger(port) || port < min || port > 65535) {
+    const from = portFlag === undefined ? "dashboard.port" : "--port";
+    fail(`${from} expects an integer ${min}-65535, got ${JSON.stringify(portFlag === undefined || portFlag === true ? port : portFlag)}`);
+  }
+  return port;
+}
+
+if (cmd === "--help" || cmd === "-h" || cmd === "help") {
+  console.log(USAGE);
+  process.exit(0);
+}
+
+// `watchtower --port 4318` is `watchtower open --port 4318`: usage shows the
+// word as optional.
+const opens = cmd === undefined || cmd === "open" || cmd === "--port" || cmd.startsWith("--port=");
+
+if (opens || cmd === "stop") {
+  const { loadConfig } = await import("../lib/config.ts");
+  const { openDashboard, stopDashboard } = await import("../lib/launch.ts");
+
+  const cfg = loadConfig();
+  const port = dashboardPort(cfg, 1);
+  const { host } = cfg.dashboard;
+  const outcome = cmd === "stop"
+    ? await stopDashboard({ host, port })
+    // The background server is this same script run as `serve`, so it
+    // resolves the same config: same cwd, same environment.
+    : await openDashboard({ host, port, db: cfg.database.path, script: fileURLToPath(import.meta.url) });
+  if (outcome.out !== undefined) console.log(outcome.out);
+  if (outcome.err !== undefined) console.error(outcome.err);
+  process.exit(outcome.code);
+}
+
+if (cmd === "sync") {
+  const { loadConfig } = await import("../lib/config.ts");
+  const { runSync } = await import("../lib/core/sync.ts");
+  const { adaptersFor } = await import("../lib/adapters/index.ts");
+
+  const cfg = loadConfig();
+  const db = cfg.database.path;
+
+  // Every enabled source. A source that is absent is reported by runSync as
+  // detected:false and is not an error.
+  const adapters = adaptersFor(cfg);
+
+  // A first run on a brand-new database exits 0 saying so.
+  // Anything that still throws here is a real failure of the DESTINATION (an
+  // unwritable path, a file that is not a SQLite database), and it is worth
+  // one legible line rather than a raw Node stack.
+  let sources;
+  try {
+    sources = await runSync({ db, adapters });
+  } catch (e) {
+    fail(`sync failed on ${db}: ${briefly(e)}`);
+  }
+  let rollup;
+  if (flag("no-rollup") !== true) {
+    const { runRollup } = await import("../lib/rollup-run.ts");
+    rollup = runRollup({ db, installDir: cfg.capture.installDir, excludePaths: cfg.excludePaths });
+  }
+  if (flag("quiet") !== true) console.log(JSON.stringify(rollup === undefined ? { db, sources } : { db, sources, rollup }));
+  // A source that failed, or a rollup that failed, is a failed sync: exit 1,
+  // after the summary, so a script can see both what worked and what did not.
+  const failed = sources.some((s) => s.error !== undefined) || (rollup !== undefined && rollup.ran && !rollup.ok);
+  process.exit(failed ? 1 : 0);
+}
+
+if (cmd === "serve") {
+  const { loadConfig } = await import("../lib/config.ts");
+  const { startDashboard } = await import("../lib/serve.ts");
+
+  const cfg = loadConfig();
+  const port = dashboardPort(cfg, 0);
+
+  let started;
+  try {
+    started = await startDashboard({
+      db: cfg.database.path,
+      host: cfg.dashboard.host,
+      port,
+      pollSeconds: cfg.dashboard.pollSeconds,
+      schemaVersion: cfg.schemaVersion,
+      configured: cfg.sources,
+    });
+  } catch (e) {
+    fail(`could not start the dashboard: ${briefly(e)}`);
+  }
+  // The database is NOT opened here. A dashboard that refuses to start because
+  // the rollup has not run yet would be worse than one that says so on /api/health.
+  console.log(`watchtower: serving ${cfg.database.path} at ${started.url}`);
+  if (cfg.dashboard.syncSeconds > 0) {
+    const { startBackgroundSync } = await import("../lib/background-sync.ts");
+    // process.argv[1] is this script, however it was invoked (a symlink on PATH included).
+    startBackgroundSync({ script: process.argv[1], everySeconds: cfg.dashboard.syncSeconds });
+  }
+  // Runs until interrupted. The await never settles: without it, control would
+  // fall through into the ingest command below.
+  await new Promise(() => {});
+}
+
+if (cmd === "report") {
+  // One self-contained HTML file: History, Projects, Skills & Models and
+  // Sources, through the same readers and renderers `serve` uses. Live is
+  // omitted -- a frozen gauge reads as current. Read-only, like serve.
+  const { loadConfig } = await import("../lib/config.ts");
+  const { buildReport } = await import("../lib/views.ts");
+  const { budgetWarning, REPORT_BUDGET_BYTES } = await import("../lib/render/report.ts");
+
+  const cfg = loadConfig();
+  const db = cfg.database.path;
+  const outFlag = flag("out");
+  if (outFlag === true || outFlag === "") fail(`--out expects a file path, or - for stdout\n${USAGE}`);
+  const out = outFlag === undefined ? "watchtower-report.html" : outFlag;
+
+  // Checked up front: a read-only open of a missing file is an error from
+  // sqlite3 anyway, but "no database at <path>" is the sentence worth printing.
+  if (!existsSync(db)) fail(`report: no database at ${db}`);
+
+  const started = Date.now();
+  let html;
+  try {
+    html = buildReport({ db, now: Math.floor(started / 1000), configured: cfg.sources });
+  } catch (e) {
+    fail(`report failed on ${db}: ${briefly(e)}`);
+  }
+  // The budget is overridable only so the warning itself can be tested
+  // without a megabyte of fixture.
+  const budgetEnv = Number(process.env.WATCHTOWER_REPORT_BUDGET_BYTES);
+  const warning = budgetWarning(Buffer.byteLength(html), Number.isFinite(budgetEnv) && budgetEnv > 0 ? budgetEnv : REPORT_BUDGET_BYTES);
+  if (warning !== null) console.error(warning);
+  if (out === "-") {
+    process.stdout.write(html);
+  } else {
+    // Replacing is the point of a report you regenerate, but not silently:
+    // the usage line says so and the success line names it.
+    const replaced = existsSync(out);
+    try {
+      writeFileSync(out, html);
+    } catch (e) {
+      fail(`could not write ${out}: ${briefly(e)}`);
+    }
+    console.log(`watchtower: ${replaced ? "overwrote" : "wrote"} ${out} (${Buffer.byteLength(html)} bytes, ${Date.now() - started} ms) from ${db}`);
+  }
+  process.exit(0);
+}
+
+if (cmd === "setup") {
+  // Checks requirements, says what it found, asks, previews the exact
+  // settings.json change, then installs capture and the rest. lib/setup/run.ts.
+  const { runSetup } = await import("../lib/setup/run.ts");
+  process.exit(await runSetup(argv.slice(1), process.env));
+}
+
+if (cmd !== "ingest") fail(`unknown command: ${cmd}\n${USAGE}`);
+
+// --stdin is the only input mode Stage 3A implements. Accepting the command
+// without it would silently read fd 0 anyway, which is a worse surprise than
+// an explicit refusal once file-based modes exist.
+if (flag("stdin") !== true) fail(`ingest requires --stdin\n${USAGE}`);
+
+const source = flag("source");
+if (source === undefined || source === true || source === "") {
+  fail("--source <id> is required and must be registered in config");
+}
+
+const { parseNdjson } = await import("../lib/adapters/external/ndjson.ts");
+
+let input;
+try {
+  input = readFileSync(0, "utf8");
+} catch (e) {
+  // A terminal with nothing piped in is the common case here; say so rather
+  // than printing an EAGAIN stack trace.
+  fail(`could not read stdin: ${e && e.message ? e.message : e}`);
+}
+
+const { records, malformed } = parseNdjson(input);
+console.log(JSON.stringify({ source, parsed: records.length, malformed }));

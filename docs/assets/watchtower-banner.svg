@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">Agent Watchtower</title>
+  <desc id="desc">The Watchtower crest beside an amber watchtower overlooking an activity chart. Know your usage. See your progress. Local agent telemetry, levels, quests and attributes.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="360" gradientUnits="userSpaceOnUse"><stop stop-color="#17171d"/><stop offset="1" stop-color="#08080c"/></linearGradient>
+    <linearGradient id="beam" x1="904" y1="110" x2="1160" y2="250" gradientUnits="userSpaceOnUse"><stop stop-color="#f59e0b" stop-opacity=".18"/><stop offset="1" stop-color="#f59e0b" stop-opacity="0"/></linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" stroke="#f5f5f4" stroke-opacity=".035"/></pattern>
+  </defs>
+  <rect width="1200" height="360" rx="20" fill="url(#bg)"/>
+  <rect width="1200" height="360" rx="20" fill="url(#grid)"/>
+  <rect x=".5" y=".5" width="1199" height="359" rx="19.5" stroke="#29292f"/>
+  <g transform="translate(62 51) scale(.47)">
+    <path fill="#08080c" stroke="#f59e0b" stroke-width="4.5" stroke-linejoin="round" d="M32 4 56 11.5V30c0 15.5-10 25.5-24 30.5C18 55.5 8 45.5 8 30V11.5z"/>
+    <path fill="#f59e0b" d="M19 27V14h5.5v4.5h4.75V14h5.5v4.5h4.75V14H45v13h-3l1.5 23h-23L22 27z"/>
+    <path fill="#fde68a" d="M29.75 22.75a2.25 2.25 0 1 0 4.5 0a2.25 2.25 0 1 0-4.5 0zM28.5 34a3.5 3.5 0 0 1 7 0v4a3.5 3.5 0 0 1-7 0z"/>
+    <path fill="#08080c" d="M27.5 50v-4a4.5 4.5 0 0 1 9 0v4z"/>
+  </g>
+  <text x="102" y="72" fill="#fde68a" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700" letter-spacing="3">AGENT WATCHTOWER</text>
+  <text x="64" y="145" fill="#f5f5f4" font-family="Arial, Helvetica, sans-serif" font-size="48" font-weight="700" letter-spacing="-1.5">Know your usage.</text>
+  <text x="64" y="201" fill="#fbbf24" font-family="Arial, Helvetica, sans-serif" font-size="48" font-weight="700" letter-spacing="-1.5">See your progress.</text>
+  <text x="66" y="246" fill="#a8a29e" font-family="Arial, Helvetica, sans-serif" font-size="18">Local agent telemetry. Levels, quests and attributes.</text>
+  <g font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" letter-spacing="1">
+    <rect x="64" y="278" width="120" height="30" rx="15" fill="#f59e0b" fill-opacity=".09" stroke="#f59e0b" stroke-opacity=".25"/><text x="77" y="298" fill="#fde68a">CLAUDE CODE</text>
+    <rect x="194" y="278" width="88" height="30" rx="15" fill="#f59e0b" fill-opacity=".09" stroke="#f59e0b" stroke-opacity=".25"/><text x="214" y="298" fill="#fde68a">CODEX</text>
+    <rect x="292" y="278" width="96" height="30" rx="15" fill="#f59e0b" fill-opacity=".09" stroke="#f59e0b" stroke-opacity=".25"/><text x="310" y="298" fill="#fde68a">HERMES</text>
+  </g>
+  <path d="M904 98L1170 45V285L904 142Z" fill="url(#beam)"/>
+  <path d="M750 282H1136" stroke="#38322b"/>
+  <g fill="#f59e0b" fill-opacity=".12">
+    <rect x="954" y="227" width="20" height="55" rx="3"/><rect x="984" y="201" width="20" height="81" rx="3"/><rect x="1014" y="217" width="20" height="65" rx="3"/><rect x="1044" y="173" width="20" height="109" rx="3"/><rect x="1074" y="189" width="20" height="93" rx="3"/>
+  </g>
+  <path d="M943 209L966 196L996 170L1026 188L1056 139L1086 156L1118 117" stroke="#f59e0b" stroke-opacity=".6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="1118" cy="117" r="4" fill="#fbbf24"/>
+  <g transform="translate(657 7) scale(5.5)">
+    <path fill="#1f1c19" stroke="#fbbf24" stroke-width="2" stroke-linejoin="round" vector-effect="non-scaling-stroke" d="M19 27V14h5.5v4.5h4.75V14h5.5v4.5h4.75V14H45v13h-3l1.5 23h-23L22 27z"/>
+    <path fill="#fbbf24" fill-opacity=".16" stroke="#f59e0b" vector-effect="non-scaling-stroke" d="M28.5 34a3.5 3.5 0 0 1 7 0v4a3.5 3.5 0 0 1-7 0z"/>
+    <path fill="#fde68a" d="M29.75 22.75a2.25 2.25 0 1 0 4.5 0a2.25 2.25 0 1 0-4.5 0z"/>
+    <path fill="#08080c" stroke="#a77728" stroke-width="2" vector-effect="non-scaling-stroke" d="M27.5 50v-4a4.5 4.5 0 0 1 9 0v4z"/>
+    <path stroke="#5a4325" vector-effect="non-scaling-stroke" d="M23.5 44h17M24.5 30.5h3M37 30.5h3M26 47v3M38 46v4"/>
+  </g>
+  <path d="M748 282H918" stroke="#fbbf24" stroke-width="2" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,27 @@
+node_modules/
+.next/
+watchtower.config.json
+*.log
+.atlas/
+.DS_Store
+
+# private working notes: the session handoff log and anything under .private/
+# hold live usage data, client names and machine paths. They stay local.
+SESSION.md
+.private/
+
+# the build logs (subagent briefs, reports and ledgers) and visual companion mockups:
+# raw measurements from live usage, so they stay local like SESSION.md
+.superpowers/
+.tools/
+dist/
+coverage/
+
+# local usage data and live config: never commit a database copy, transcript or secret
+*.sqlite
+*.sqlite-*
+*.db
+*.db-*
+.env
+.env.*
+!.env.example

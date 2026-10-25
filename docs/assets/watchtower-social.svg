@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">Agent Watchtower</title>
+  <desc id="desc">The Watchtower crest. Know your usage. See your progress. Local agent telemetry, levels, quests and attributes for Claude Code, Codex and Hermes.</desc>
+  <!-- GitHub's social preview. watchtower-social.png is this file rendered at 1280 by 640:
+       an img of it screenshot by headless Chrome at that window size and a device scale of 1. -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1280" y2="640" gradientUnits="userSpaceOnUse"><stop stop-color="#17171d"/><stop offset="1" stop-color="#08080c"/></linearGradient>
+    <radialGradient id="glow" cx="262" cy="318" r="250" gradientUnits="userSpaceOnUse"><stop stop-color="#f59e0b" stop-opacity=".2"/><stop offset="1" stop-color="#f59e0b" stop-opacity="0"/></radialGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" stroke="#f5f5f4" stroke-opacity=".035"/></pattern>
+  </defs>
+  <rect width="1280" height="640" fill="url(#bg)"/>
+  <rect width="1280" height="640" fill="url(#grid)"/>
+  <circle cx="262" cy="318" r="250" fill="url(#glow)"/>
+  <g transform="translate(96 150) scale(5.2)">
+    <path fill="#08080c" stroke="#f59e0b" stroke-width="4.5" stroke-linejoin="round" d="M32 4 56 11.5V30c0 15.5-10 25.5-24 30.5C18 55.5 8 45.5 8 30V11.5z"/>
+    <path fill="#f59e0b" d="M19 27V14h5.5v4.5h4.75V14h5.5v4.5h4.75V14H45v13h-3l1.5 23h-23L22 27z"/>
+    <path fill="#fde68a" d="M29.75 22.75a2.25 2.25 0 1 0 4.5 0a2.25 2.25 0 1 0-4.5 0zM28.5 34a3.5 3.5 0 0 1 7 0v4a3.5 3.5 0 0 1-7 0z"/>
+    <path fill="#08080c" d="M27.5 50v-4a4.5 4.5 0 0 1 9 0v4z"/>
+  </g>
+  <text x="470" y="204" fill="#fde68a" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" letter-spacing="4">AGENT WATCHTOWER</text>
+  <text x="468" y="292" fill="#f5f5f4" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="700" letter-spacing="-2">Know your usage.</text>
+  <text x="468" y="370" fill="#fbbf24" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="700" letter-spacing="-2">See your progress.</text>
+  <text x="470" y="426" fill="#a8a29e" font-family="Arial, Helvetica, sans-serif" font-size="24">Local agent telemetry. Levels, quests and attributes.</text>
+  <g font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="700" letter-spacing="1.2">
+    <rect x="470" y="462" width="158" height="40" rx="20" fill="#f59e0b" fill-opacity=".09" stroke="#f59e0b" stroke-opacity=".25"/><text x="488" y="487" fill="#fde68a">CLAUDE CODE</text>
+    <rect x="640" y="462" width="106" height="40" rx="20" fill="#f59e0b" fill-opacity=".09" stroke="#f59e0b" stroke-opacity=".25"/><text x="664" y="487" fill="#fde68a">CODEX</text>
+    <rect x="758" y="462" width="118" height="40" rx="20" fill="#f59e0b" fill-opacity=".09" stroke="#f59e0b" stroke-opacity=".25"/><text x="780" y="487" fill="#fde68a">HERMES</text>
+  </g>
+</svg>

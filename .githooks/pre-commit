@@ -1,0 +1,5 @@
+#!/bin/sh
+set -eu
+repo_root=$(git rev-parse --show-toplevel)
+node "$repo_root/script/check-secrets.ts" --staged
+exec node "$repo_root/script/check-privacy.ts" --staged

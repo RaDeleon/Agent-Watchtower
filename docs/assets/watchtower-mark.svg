@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">Agent Watchtower</title>
+  <path fill="#08080c" stroke="#f59e0b" stroke-width="4.5" stroke-linejoin="round" d="M32 4 56 11.5V30c0 15.5-10 25.5-24 30.5C18 55.5 8 45.5 8 30V11.5z"/>
+  <path fill="#f59e0b" d="M19 27V14h5.5v4.5h4.75V14h5.5v4.5h4.75V14H45v13h-3l1.5 23h-23L22 27z"/>
+  <path fill="#fde68a" d="M29.75 22.75a2.25 2.25 0 1 0 4.5 0a2.25 2.25 0 1 0-4.5 0zM28.5 34a3.5 3.5 0 0 1 7 0v4a3.5 3.5 0 0 1-7 0z"/>
+  <path fill="#08080c" d="M27.5 50v-4a4.5 4.5 0 0 1 9 0v4z"/>
+</svg>
