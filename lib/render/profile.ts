@@ -1,5 +1,5 @@
 /**
- * The Usage Profile view: the 6-tier ladder, TheOne's 3-tier Matrix hygiene
+ * The Usage Profile view: the 6-tier ladder, the 3-tier Matrix hygiene
  * score, and the ten discipline cards, in that order, then the total over
  * time (spec §5).
  *
@@ -10,12 +10,10 @@
  * literals) and fails the build if one appears; the tier boundaries printed
  * here (45, 75, 100, ...) are labels, not that guard's targets.
  *
- * Discipline labels, blurbs and tier copy are TheOne's own text, held here
- * verbatim as labels (TheOneOS `lib/ccflare/usage-profile.ts`'s
- * `AI_DISCIPLINES` / `AI_USAGE_TIERS`, and `lib/ccflare/profile.ts`'s
- * `TIER_META`). Only existing primitives are used: `card`, `areaChart`, and
- * the `.meter` progress-bar markup History's rank ladder and Live's rank card
- * already use -- no new chart type.
+ * Discipline labels, blurbs and tier copy are held here as labels. Only
+ * existing primitives are used: `card`, `areaChart`, and the `.meter`
+ * progress-bar markup History's rank ladder and Live's rank card already use
+ * -- no new chart type.
  */
 import type { DisciplineId, DisciplineRow, DisciplineStatus, ProfileData, ProfileDay } from "../read/profile.ts";
 import { DISCIPLINE_ORDER } from "../read/profile.ts";
@@ -27,7 +25,7 @@ import { card, viewPage, type View } from "./layout.ts";
 
 const COLLECTING_TEXT = "collecting — fewer than 20 requests in the last 30 days";
 
-/** The six ladder tiers, TheOne's own copy (`AI_USAGE_TIERS`), index 0..5. */
+/** The six ladder tiers, index 0..5. */
 const LADDER_TIERS: readonly { label: string; description: string }[] = [
   {
     label: "Noobie",
@@ -61,7 +59,7 @@ const LADDER_TIERS: readonly { label: string; description: string }[] = [
   },
 ];
 
-/** TheOne's 3-tier Matrix hygiene tiers (`TIER_META`), index 0..2. */
+/** The 3-tier Matrix hygiene tiers, index 0..2. */
 const MATRIX_TIERS: readonly { name: string; blurb: string }[] = [
   {
     name: "Coppertop",
@@ -79,7 +77,7 @@ const MATRIX_TIERS: readonly { name: string; blurb: string }[] = [
   },
 ];
 
-/** TheOne's discipline labels and blurbs (`AI_DISCIPLINES`), by id. */
+/** The discipline labels and blurbs, by id. */
 const DISCIPLINE_META: Record<DisciplineId, { label: string; blurb: string }> = {
   "prompt-hygiene": {
     label: "Prompt hygiene",
@@ -289,7 +287,7 @@ function matrixCard(d: ProfileData): string {
     factorRow("session length", f.sessionLength, i.medianRequests === null ? null : `${num(i.medianRequests, 1)} median requests/session`),
     factorRow("efficiency", f.efficiency, i.cacheFreshRatio === null ? null : `${num(i.cacheFreshRatio, 1)}x cache:fresh`),
   ].join("");
-  // TheOne's buildTrend: the week over week is a 7-day-vs-7-day delta, so it
+  // The week over week is a 7-day-vs-7-day delta, so it
   // is shown beside the 7-day score it is a delta OF -- never beside the
   // 30-day score above, where "-6" read as "was 71".
   const sevenDay =
@@ -316,7 +314,7 @@ function matrixCard(d: ProfileData): string {
   });
 }
 
-/** Sentences behind a score, TheOne's wording. A null value reads "not measured", never 0. */
+/** Sentences behind a score. A null value reads "not measured", never 0. */
 function evidenceLines(id: DisciplineId, e: Record<string, number | string | null>, event?: EventCoverage): string[] {
   const n = (k: string): number | null => (typeof e[k] === "number" ? (e[k] as number) : null);
   const s = (k: string): string | null => (typeof e[k] === "string" ? (e[k] as string) : null);
@@ -425,19 +423,18 @@ function evidenceLines(id: DisciplineId, e: Record<string, number | string | nul
 
 function disciplineCard(row: DisciplineRow, coverageStart: string | null, event: EventCoverage): string {
   const meta = DISCIPLINE_META[row.id];
-  const badge = row.definition === "watchtower" ? `<span class="chip">Watchtower definition</span>` : "";
   const lines = evidenceLines(row.id, row.evidence, event);
   const needsData = row.status === "needs-data";
   const missing = needsData ? `<p class="muted label">${esc(needsDataText(row.id, coverageStart, row.evidence, event))}</p>` : "";
   // The 0-60 number beside the word, so the ten visibly sum to the total. A
-  // needs-data score is stored as 0 (it counts 0 toward the total, as in
-  // TheOne) but nothing measured it: a dash, never a fabricated 0.
+  // needs-data score is stored as 0 (it counts 0 toward the total) but
+  // nothing measured it: a dash, never a fabricated 0.
   const outOf = `<span class="muted">· ${needsData ? "—" : row.score} / 60</span>`;
   return card({
     title: meta.label,
     body:
       meter(row.score, 60) +
-      `<div class="split"><span><span class="${STATUS_CLASS[row.status]}">${esc(STATUS_LABEL[row.status])}</span> ${outOf}</span>${badge}</div>` +
+      `<div class="split"><span><span class="${STATUS_CLASS[row.status]}">${esc(STATUS_LABEL[row.status])}</span> ${outOf}</span></div>` +
       `<p class="muted label">${esc(meta.blurb)}</p>` +
       `<ul>${lines.map((l) => `<li>${esc(l)}</li>`).join("")}</ul>` +
       missing,
@@ -512,8 +509,8 @@ export function profileView(d: ProfileData): View {
     body: sections.join(""),
     sections,
     footer:
-      `days are local, as the rollup buckets them · scores follow TheOne's ten-discipline, 600-point model and its 3-tier Matrix ` +
-      `hygiene score, with two Watchtower definitions (automation, security) · a score with no measurement behind it never fabricates one`,
+      `days are local, as the rollup buckets them · scores follow a ten-discipline, 600-point model and a 3-tier Matrix ` +
+      `hygiene score · a score with no measurement behind it never fabricates one`,
   };
 }
 

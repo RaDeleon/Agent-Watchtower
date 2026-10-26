@@ -4,15 +4,15 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import {
   CODEX_DRIVEN, CODEX_AUTOMATED, HERMES_DRIVEN, HERMES_AUTOMATED,
-  configFileFor, entryLists, expandHome, freshDbPath, legacyDbPath, loadConfig,
+  configFileFor, entryLists, expandHome, defaultDbPath, loadConfig,
 } from "@/lib/config";
 import { adaptersFor } from "@/lib/adapters";
 
 describe("expandHome", () => {
   it("expands a leading ~ to the home directory", () => {
-    const out = expandHome("~/.theone/db.sqlite");
+    const out = expandHome("~/.watchtower/db.sqlite");
     expect(out.startsWith("~")).toBe(false);
-    expect(out.endsWith("/.theone/db.sqlite")).toBe(true);
+    expect(out.endsWith("/.watchtower/db.sqlite")).toBe(true);
   });
 
   it("leaves absolute paths untouched", () => {
@@ -25,10 +25,10 @@ describe("loadConfig", () => {
     const c = loadConfig({
       configPath: "/nonexistent/watchtower.config.json",
       env: {},
-      fileExists: () => true,
     });
     expect(c.schemaVersion).toBe(11);
-    expect(c.database.path.endsWith("/.theone/claude-code-usage.sqlite")).toBe(true);
+    expect(c.database.path).toBe(defaultDbPath());
+    expect(c.database.path.endsWith("/.watchtower/watchtower.sqlite")).toBe(true);
     expect(c.capture.installDir.endsWith("/.claude")).toBe(true);
     expect(c.coach.mode).toBe("cli");
     expect(c.coach.apiKey).toBeNull();
@@ -38,18 +38,18 @@ describe("loadConfig", () => {
     const dir = mkdtempSync(path.join(tmpdir(), "wt-"));
     const p = path.join(dir, "watchtower.config.json");
     writeFileSync(p, JSON.stringify({ capture: { installDir: "/opt/claude" } }));
-    const c = loadConfig({ configPath: p, env: {}, fileExists: () => true });
+    const c = loadConfig({ configPath: p, env: {} });
     expect(c.capture.installDir).toBe("/opt/claude");
     // untouched keys keep their defaults
     expect(c.coach.mode).toBe("cli");
-    expect(c.database.path.endsWith("/.theone/claude-code-usage.sqlite")).toBe(true);
+    expect(c.database.path.endsWith("/.watchtower/watchtower.sqlite")).toBe(true);
   });
 
-  it("lets THEONE_DB_PATH override the config file", () => {
+  it("lets WATCHTOWER_DB_PATH override the config file", () => {
     const dir = mkdtempSync(path.join(tmpdir(), "wt-"));
     const p = path.join(dir, "watchtower.config.json");
     writeFileSync(p, JSON.stringify({ database: { path: "/from/file.sqlite" } }));
-    const c = loadConfig({ configPath: p, env: { THEONE_DB_PATH: "/from/env.sqlite" } });
+    const c = loadConfig({ configPath: p, env: { WATCHTOWER_DB_PATH: "/from/env.sqlite" } });
     expect(c.database.path).toBe("/from/env.sqlite");
   });
 
@@ -265,63 +265,6 @@ describe("dashboard", () => {
       .toThrow(/WATCHTOWER_DASHBOARD_PORT/);
   });
 });
-
-describe("database path resolution", () => {
-  it("lets WATCHTOWER_DB_PATH win over the deprecated THEONE_DB_PATH alias", () => {
-    const c = loadConfig({
-      configPath: "/nonexistent/watchtower.config.json",
-      env: { THEONE_DB_PATH: "/old.sqlite", WATCHTOWER_DB_PATH: "/new.sqlite" },
-    });
-    expect(c.database.path).toBe("/new.sqlite");
-  });
-
-  it("still honours THEONE_DB_PATH alone, so existing installs keep working", () => {
-    const c = loadConfig({
-      configPath: "/nonexistent/watchtower.config.json",
-      env: { THEONE_DB_PATH: "/old.sqlite" },
-    });
-    expect(c.database.path).toBe("/old.sqlite");
-  });
-
-  // Architecture decision 3 defers the MOVE, not the rename: an install that
-  // already has a database keeps it forever, and only a machine with none starts
-  // at the new name. Shipping neither half left a 2027 first-run still landing in
-  // ~/.theone/claude-code-usage.sqlite, which is the Claude-centric name the
-  // whole reframe exists to shed.
-  it("keeps an existing legacy database rather than moving it", () => {
-    const c = loadConfig({
-      configPath: "/nonexistent/watchtower.config.json",
-      env: {},
-      fileExists: () => true,
-    });
-    expect(c.database.path).toBe(legacyDbPath());
-    expect(c.database.path.endsWith("/.theone/claude-code-usage.sqlite")).toBe(true);
-  });
-
-  it("starts a machine with no legacy database at ~/.watchtower/watchtower.sqlite", () => {
-    const c = loadConfig({
-      configPath: "/nonexistent/watchtower.config.json",
-      env: {},
-      fileExists: () => false,
-    });
-    expect(c.database.path).toBe(freshDbPath());
-    expect(c.database.path.endsWith("/.watchtower/watchtower.sqlite")).toBe(true);
-  });
-
-  // `() => true` is satisfied by a probe of ANY path, including none at all, so
-  // pin which path is actually asked about. A probe of the config file, or of the
-  // fresh path, would answer the same and be wrong.
-  it("probes the legacy database itself, not some other path", () => {
-    const asked: string[] = [];
-    loadConfig({
-      configPath: "/nonexistent/watchtower.config.json",
-      env: {},
-      fileExists: (p) => { asked.push(p); return false; },
-    });
-    expect(asked).toContain(legacyDbPath());
-  });
-});
-
 
 describe("config file location", () => {
   // Guard 13. `watchtower setup` writes its config into the checkout, and the

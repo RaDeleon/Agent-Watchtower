@@ -130,7 +130,7 @@ describe("cost at API prices", () => {
     const copy = path.join(dir, "rollup-copy.sh");
     writeFileSync(copy, spliced);
     execFileSync("bash", [copy, "--quiet"], {
-      env: { ...process.env, THEONE_DB_PATH: db, CC_LIB_PATH: LIB, TZ: "UTC" },
+      env: { ...process.env, WATCHTOWER_DB_PATH: db, CC_LIB_PATH: LIB, TZ: "UTC" },
       encoding: "utf8",
     });
     const byDay = Object.fromEntries(

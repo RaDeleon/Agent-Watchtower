@@ -1,6 +1,6 @@
 {
   "schemaVersion": 4,
-  "database": { "path": "~/.theone/claude-code-usage.sqlite" },
+  "database": { "path": "~/.watchtower/watchtower.sqlite" },
   "capture": { "installDir": "~/.claude" },
   "coach": { "mode": "cli", "apiKey": null }
 }

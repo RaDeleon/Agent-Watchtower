@@ -3,14 +3,14 @@
 // pre-commit secret check (script/check-secrets.ts --staged) rejects any staged
 // path that matches, before it scans contents, including files force-added past
 // .gitignore. Watchtower's real data lives outside the repository
-// (~/.theone/claude-code-usage.sqlite, ~/.claude/projects/**/*.jsonl); these
+// (~/.watchtower/watchtower.sqlite, ~/.claude/projects/**/*.jsonl); these
 // rules keep a copy of it from being committed by accident.
 
 const LOCAL_DIRECTORIES = new Set([
   "logs", "debug-logs", "debug-output", "outputs", "artifacts", "test-results",
   "test-output", "coverage", "screenshots", "recordings", "traces", ".audit",
   ".local", "local-data", "node_modules", ".tools", "dist",
-  ".claude", ".codex", ".hermes", ".theone", ".openviking", ".atlas", ".private",
+  ".claude", ".codex", ".hermes", ".watchtower", ".openviking", ".atlas", ".private",
   ".superpowers",
 ]);
 

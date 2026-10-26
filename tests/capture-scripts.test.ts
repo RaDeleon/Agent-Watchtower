@@ -180,7 +180,7 @@ describe("capture scripts", () => {
   // CASE must name Apprentice, Builder, Intermediate and Advanced, which the
   // page never needs (it prints the stored tier). The other three tier names
   // are not pinned: "Noobie" and "Master" are also the Usage Profile ladder's
-  // labels in lib/render/profile.ts (TheOne's AI_USAGE_TIERS), and "Pro" is a
+  // labels in lib/render/profile.ts, and "Pro" is a
   // substring of Profile, Projects and Progress. Pace is XP over 28 calendar
   // days, so a "/ 28" or "* 28" in lib/ is the pace or ETA formula copied; the
   // page's "28 days" captions do not match. Streak math has no literal to pin.
@@ -347,64 +347,38 @@ describe("capture scripts", () => {
   });
 });
 
-// Stage 3A gave lib/config.ts a WATCHTOWER_DB_PATH override and left cc_db_path
-// reading THEONE_DB_PATH only. Nothing failed: the reader pointed at the new
-// file, the hooks kept writing to the old one, and every write on that path
-// swallows its own error by design -- so the symptom was a dashboard of zeros
-// over a database that was still being filled correctly somewhere else.
-// These pin the two halves to one resolution order.
+// The reader once got a WATCHTOWER_DB_PATH override the writer did not read.
+// Nothing failed: the reader pointed at the new file, the hooks kept writing to
+// the old one, and every write on that path swallows its own error by design --
+// so the symptom was a dashboard of zeros over a database that was still being
+// filled correctly somewhere else. These pin the two halves to one resolution.
 describe("cc_db_path: the writer must resolve where the reader reads", () => {
-  /** cc_db_path under a controlled HOME, with both overrides cleared first. */
+  /** cc_db_path under a controlled HOME, with the override cleared first. */
   const dbPath = (home: string, over: Record<string, string> = {}): string =>
     execFileSync("bash", ["-c", `. "${LIB_PATH}"; cc_db_path`], {
       encoding: "utf8",
       env: {
         ...process.env,
-        THEONE_DB_PATH: "",
         WATCHTOWER_DB_PATH: "",
         HOME: home,
         ...over,
       },
     }).trim();
 
-  /** A HOME with a legacy database in it, and one without. */
-  const homeWithLegacy = (): string => {
-    const home = mkdtempSync(path.join(tmpdir(), "wt-home-"));
-    mkdirSync(path.join(home, ".theone"), { recursive: true });
-    writeFileSync(path.join(home, ".theone", "claude-code-usage.sqlite"), "");
-    return home;
-  };
   const emptyHome = (): string => mkdtempSync(path.join(tmpdir(), "wt-home-"));
 
-  it("honours WATCHTOWER_DB_PATH, the variable the reader added", () => {
-    expect(dbPath(emptyHome(), { WATCHTOWER_DB_PATH: "/new.sqlite" })).toBe("/new.sqlite");
-  });
-
-  it("lets WATCHTOWER_DB_PATH win over the deprecated THEONE_DB_PATH alias", () => {
-    const got = dbPath(emptyHome(), {
-      THEONE_DB_PATH: "/old.sqlite",
-      WATCHTOWER_DB_PATH: "/new.sqlite",
-    });
+  it("honours WATCHTOWER_DB_PATH, the variable the reader reads", () => {
+    const got = dbPath(emptyHome(), { WATCHTOWER_DB_PATH: "/new.sqlite" });
     expect(got).toBe("/new.sqlite");
-    // Same precedence the reader applies, so a machine setting both cannot split.
     expect(got).toBe(
       loadConfig({
         configPath: "/nonexistent/watchtower.config.json",
-        env: { THEONE_DB_PATH: "/old.sqlite", WATCHTOWER_DB_PATH: "/new.sqlite" },
+        env: { WATCHTOWER_DB_PATH: "/new.sqlite" },
       }).database.path,
     );
   });
 
-  it("still honours THEONE_DB_PATH alone, so every existing install keeps working", () => {
-    expect(dbPath(emptyHome(), { THEONE_DB_PATH: "/old.sqlite" })).toBe("/old.sqlite");
-  });
-
-  it("keeps an existing legacy database rather than moving it", () => {
-    const home = homeWithLegacy();
-    expect(dbPath(home)).toBe(path.join(home, ".theone", "claude-code-usage.sqlite"));
-  });
-
-  it("starts a machine with no legacy database at ~/.watchtower/watchtower.sqlite", () => {
+  it("defaults to ~/.watchtower/watchtower.sqlite", () => {
     const home = emptyHome();
     expect(dbPath(home)).toBe(path.join(home, ".watchtower", "watchtower.sqlite"));
   });
@@ -470,7 +444,7 @@ describe("cc_init_db: schema migrations", () => {
 
     // Run the CURRENT cc_init_db exactly once against this v1 database.
     execFileSync("bash", ["-c", `. "${LIB_PATH}"; cc_init_db`], {
-      env: { ...process.env, THEONE_DB_PATH: dbPath },
+      env: { ...process.env, WATCHTOWER_DB_PATH: dbPath },
       encoding: "utf8",
     });
 
@@ -541,7 +515,7 @@ describe("cc_init_db: schema migrations", () => {
     // Exactly ONE call, for the same reason as the v1 case: a second call papers
     // over the failure, because by then the first has already done the work.
     execFileSync("bash", ["-c", `. "${LIB_PATH}"; cc_init_db`], {
-      env: { ...process.env, THEONE_DB_PATH: dbPath },
+      env: { ...process.env, WATCHTOWER_DB_PATH: dbPath },
       encoding: "utf8",
     });
 
@@ -571,7 +545,7 @@ describe("schema v4", () => {
     const dir = mkdtempSync(path.join(tmpdir(), "wt-v4-"));
     const db = path.join(dir, "fixture.sqlite");
     execFileSync("bash", ["-c", `. "${LIB_PATH}"; CC_SCHEMA_VERSION=4; cc_init_db`], {
-      env: { ...process.env, THEONE_DB_PATH: db }, encoding: "utf8",
+      env: { ...process.env, WATCHTOWER_DB_PATH: db }, encoding: "utf8",
     });
     const tables = execFileSync("sqlite3", [db,
       "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;"],
@@ -586,12 +560,12 @@ describe("schema v4", () => {
     const db = path.join(dir, "fixture.sqlite");
     // Build at v3 by stamping the old marker, then re-init at v4.
     execFileSync("bash", ["-c", `. "${LIB_PATH}"; CC_SCHEMA_VERSION=3; cc_init_db`], {
-      env: { ...process.env, THEONE_DB_PATH: db }, encoding: "utf8",
+      env: { ...process.env, WATCHTOWER_DB_PATH: db }, encoding: "utf8",
     });
     execFileSync("sqlite3", [db,
       "INSERT INTO claude_sessions(session_id, started_at) VALUES('s1', 1750000000);"]);
     execFileSync("bash", ["-c", `. "${LIB_PATH}"; CC_SCHEMA_VERSION=4; cc_init_db`], {
-      env: { ...process.env, THEONE_DB_PATH: db }, encoding: "utf8",
+      env: { ...process.env, WATCHTOWER_DB_PATH: db }, encoding: "utf8",
     });
     expect(execFileSync("sqlite3", [db, "SELECT count(*) FROM claude_sessions;"],
       { encoding: "utf8" }).trim()).toBe("1");
@@ -630,7 +604,7 @@ const LIB_V5_PATH = path.join(ROOT, "tests", "fixtures", "lib-v5.sh");
 function buildV5(db: string): void {
   expect(readFileSync(LIB_V5_PATH, "utf8")).toMatch(/^CC_SCHEMA_VERSION=5$/m);
   execFileSync("bash", ["-c", `. "${LIB_V5_PATH}"; cc_init_db`], {
-    env: { ...process.env, THEONE_DB_PATH: db }, encoding: "utf8",
+    env: { ...process.env, WATCHTOWER_DB_PATH: db }, encoding: "utf8",
   });
 }
 
@@ -639,7 +613,7 @@ describe("schema v6", () => {
     const dir = mkdtempSync(path.join(tmpdir(), "wt-v6-"));
     const db = path.join(dir, "fixture.sqlite");
     execFileSync("bash", ["-c", `. "${LIB_PATH}"; cc_init_db`], {
-      env: { ...process.env, THEONE_DB_PATH: db }, encoding: "utf8",
+      env: { ...process.env, WATCHTOWER_DB_PATH: db }, encoding: "utf8",
     });
     const tables = tablesOf(db);
     for (const table of [
@@ -675,7 +649,7 @@ describe("schema v6", () => {
     const dir = mkdtempSync(path.join(tmpdir(), "wt-v4up-"));
     const db = path.join(dir, "fixture.sqlite");
     execFileSync("bash", ["-c", `. "${LIB_PATH}"; CC_SCHEMA_VERSION=4; cc_init_db`], {
-      env: { ...process.env, THEONE_DB_PATH: db }, encoding: "utf8",
+      env: { ...process.env, WATCHTOWER_DB_PATH: db }, encoding: "utf8",
     });
     expect(existsSync(path.join(dir, ".schema-v4"))).toBe(true);
     execFileSync("sqlite3", [db,
@@ -698,7 +672,7 @@ describe("schema v6", () => {
 
     // The real upgrade: cc_init_db at the CURRENT version, no override.
     execFileSync("bash", ["-c", `. "${LIB_PATH}"; cc_init_db`], {
-      env: { ...process.env, THEONE_DB_PATH: db }, encoding: "utf8",
+      env: { ...process.env, WATCHTOWER_DB_PATH: db }, encoding: "utf8",
     });
 
     const tables = tablesOf(db);
@@ -749,7 +723,7 @@ describe("schema v6", () => {
     // Exactly ONE call at the current version: a second would paper over a
     // failed first, as in the v1 and v2 cases above.
     execFileSync("bash", ["-c", `. "${LIB_PATH}"; cc_init_db`], {
-      env: { ...process.env, THEONE_DB_PATH: db }, encoding: "utf8",
+      env: { ...process.env, WATCHTOWER_DB_PATH: db }, encoding: "utf8",
     });
 
     for (const [table, col] of V6_COLUMNS) {
@@ -794,14 +768,14 @@ describe("schema v6", () => {
       { mode: 0o755 });
 
     execFileSync("bash", ["-c", `. "${LIB_PATH}"; cc_init_db`], {
-      env: { ...process.env, PATH: `${shim}:${process.env.PATH}`, THEONE_DB_PATH: db }, encoding: "utf8",
+      env: { ...process.env, PATH: `${shim}:${process.env.PATH}`, WATCHTOWER_DB_PATH: db }, encoding: "utf8",
     });
     expect(columnsOf(db, "claude_requests")).not.toContain("sent_ms");
     expect(columnsOf(db, "claude_requests")).toContain("first_ms");
     expect(existsSync(path.join(dir, `.schema-v${schemaVersion()}`))).toBe(false);
 
     execFileSync("bash", ["-c", `. "${LIB_PATH}"; cc_init_db`], {
-      env: { ...process.env, THEONE_DB_PATH: db }, encoding: "utf8",
+      env: { ...process.env, WATCHTOWER_DB_PATH: db }, encoding: "utf8",
     });
     expect(columnsOf(db, "claude_requests")).toContain("sent_ms");
     expect(existsSync(path.join(dir, `.schema-v${schemaVersion()}`))).toBe(true);
@@ -822,7 +796,7 @@ describe("schema v7", () => {
     const dir = mkdtempSync(path.join(tmpdir(), "wt-v7-"));
     const db = path.join(dir, "fixture.sqlite");
     execFileSync("bash", ["-c", `. "${LIB_PATH}"; cc_init_db`], {
-      env: { ...process.env, THEONE_DB_PATH: db }, encoding: "utf8",
+      env: { ...process.env, WATCHTOWER_DB_PATH: db }, encoding: "utf8",
     });
     for (const table of V7_TABLES) expect(tablesOf(db)).toContain(table);
     expect(indexesOf(db)).toContain("idx_agent_request_metrics_day");
@@ -835,7 +809,7 @@ describe("schema v7", () => {
     buildV5(db);
     for (const table of V7_TABLES) expect(tablesOf(db)).not.toContain(table);
     execFileSync("bash", ["-c", `. "${LIB_PATH}"; cc_init_db`], {
-      env: { ...process.env, THEONE_DB_PATH: db }, encoding: "utf8",
+      env: { ...process.env, WATCHTOWER_DB_PATH: db }, encoding: "utf8",
     });
     for (const table of V7_TABLES) expect(tablesOf(db)).toContain(table);
     expect(indexesOf(db)).toContain("idx_agent_request_metrics_day");
@@ -853,7 +827,7 @@ describe("schema v8", () => {
     const dir = mkdtempSync(path.join(tmpdir(), "wt-v8-"));
     const db = path.join(dir, "fixture.sqlite");
     execFileSync("bash", ["-c", `. "${LIB_PATH}"; cc_init_db`], {
-      env: { ...process.env, THEONE_DB_PATH: db }, encoding: "utf8",
+      env: { ...process.env, WATCHTOWER_DB_PATH: db }, encoding: "utf8",
     });
     for (const table of V8_TABLES) expect(tablesOf(db)).toContain(table);
     expect(existsSync(path.join(dir, `.schema-v${schemaVersion()}`))).toBe(true);
@@ -865,7 +839,7 @@ describe("schema v8", () => {
     buildV5(db);
     for (const table of V8_TABLES) expect(tablesOf(db)).not.toContain(table);
     execFileSync("bash", ["-c", `. "${LIB_PATH}"; cc_init_db`], {
-      env: { ...process.env, THEONE_DB_PATH: db }, encoding: "utf8",
+      env: { ...process.env, WATCHTOWER_DB_PATH: db }, encoding: "utf8",
     });
     for (const table of V8_TABLES) expect(tablesOf(db)).toContain(table);
   });
@@ -880,7 +854,7 @@ describe("schema v9", () => {
     const dir = mkdtempSync(path.join(tmpdir(), "wt-v9-"));
     const db = path.join(dir, "fixture.sqlite");
     execFileSync("bash", ["-c", `. "${LIB_PATH}"; cc_init_db`], {
-      env: { ...process.env, THEONE_DB_PATH: db }, encoding: "utf8",
+      env: { ...process.env, WATCHTOWER_DB_PATH: db }, encoding: "utf8",
     });
     for (const table of V9_TABLES) expect(tablesOf(db)).toContain(table);
     expect(existsSync(path.join(dir, `.schema-v${schemaVersion()}`))).toBe(true);
@@ -893,7 +867,7 @@ describe("schema v9", () => {
     for (const table of V9_TABLES) expect(tablesOf(db)).not.toContain(table);
     execFileSync("sqlite3", [db, "INSERT INTO claude_requests(request_id, ts, tokens_out) VALUES('req_v5', 1750000000, 42);"]);
     execFileSync("bash", ["-c", `. "${LIB_PATH}"; cc_init_db`], {
-      env: { ...process.env, THEONE_DB_PATH: db }, encoding: "utf8",
+      env: { ...process.env, WATCHTOWER_DB_PATH: db }, encoding: "utf8",
     });
     for (const table of V9_TABLES) expect(tablesOf(db)).toContain(table);
     expect(execFileSync("sqlite3", [db, "SELECT request_id, ts, tokens_out FROM claude_requests;"], { encoding: "utf8" }).trim())
@@ -910,7 +884,7 @@ describe("schema v10", () => {
     const dir = mkdtempSync(path.join(tmpdir(), "wt-v10-"));
     const db = path.join(dir, "fixture.sqlite");
     execFileSync("bash", ["-c", `. "${LIB_PATH}"; cc_init_db`], {
-      env: { ...process.env, THEONE_DB_PATH: db }, encoding: "utf8",
+      env: { ...process.env, WATCHTOWER_DB_PATH: db }, encoding: "utf8",
     });
     for (const table of V10_TABLES) expect(tablesOf(db)).toContain(table);
     expect(existsSync(path.join(dir, `.schema-v${schemaVersion()}`))).toBe(true);
@@ -923,7 +897,7 @@ describe("schema v10", () => {
     for (const table of V10_TABLES) expect(tablesOf(db)).not.toContain(table);
     execFileSync("sqlite3", [db, "INSERT INTO claude_requests(request_id, ts, tokens_out) VALUES('req_v5', 1750000000, 42);"]);
     execFileSync("bash", ["-c", `. "${LIB_PATH}"; cc_init_db`], {
-      env: { ...process.env, THEONE_DB_PATH: db }, encoding: "utf8",
+      env: { ...process.env, WATCHTOWER_DB_PATH: db }, encoding: "utf8",
     });
     for (const table of V10_TABLES) expect(tablesOf(db)).toContain(table);
     expect(execFileSync("sqlite3", [db, "SELECT request_id, ts, tokens_out FROM claude_requests;"], { encoding: "utf8" }).trim())
@@ -938,7 +912,7 @@ describe("schema v11", () => {
   it("upgrades a v10 database in one call: the v11 tables and column, rows untouched", () => {
     const dir = mkdtempSync(path.join(tmpdir(), "wt-v10-"));
     const db = path.join(dir, "claude-code-usage.sqlite");
-    const env = { ...process.env, THEONE_DB_PATH: db, WATCHTOWER_DB_PATH: db, CC_LIB_PATH: LIB_PATH };
+    const env = { ...process.env, WATCHTOWER_DB_PATH: db, CC_LIB_PATH: LIB_PATH };
     const init = () => execFileSync("bash", ["-c", '. "$CC_LIB_PATH" && cc_init_db'], { env, encoding: "utf8" });
     init();
     // ALTER TABLE ... DROP COLUMN needs sqlite3 3.35 or later (2021); only this fixture uses it, never lib.sh.
@@ -1028,7 +1002,7 @@ describe("snapshot.sh execution", () => {
       dbPath,
       env: {
         CC_LIB_PATH: LIB_PATH,
-        THEONE_DB_PATH: dbPath,
+        WATCHTOWER_DB_PATH: dbPath,
         // Isolate the throttle marker dir (${TMPDIR:-/tmp}/cc-snap/<session>)
         // per test so runs can never collide with each other or real sessions.
         TMPDIR: path.join(dir, "tmp"),

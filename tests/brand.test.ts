@@ -14,7 +14,7 @@ const ROOT = path.resolve(__dirname, "..");
 const shell = () => page({ title: "x", active: "/", body: "" });
 
 describe("the crest", () => {
-  it("is every page's favicon, in TheOne amber whatever the theme", () => {
+  it("is every page's favicon, in amber whatever the theme", () => {
     const links = shell().match(/<link rel="icon"[^>]*>/g) ?? [];
     expect(links).toHaveLength(1);
     const href = links[0]?.match(/href="([^"]*)"/)?.[1] ?? "";

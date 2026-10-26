@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# claude-usage-rollup.sh — rebuild TheOne's derived daily rollups + rank record.
+# claude-usage-rollup.sh — rebuild Watchtower's derived daily rollups + rank record.
 #
 # Idempotent: recomputes claude_daily_rollups and the claude_rank_progress singleton
 # from the raw claude_sessions / claude_events / claude_status_snapshots /
@@ -10,7 +10,7 @@
 # history + canonical rank snapshot (safe to re-run anytime; dropping it loses nothing).
 #
 # Run:  ~/.claude/claude-usage-rollup.sh            # rebuild + print today's summary
-#       ~/.claude/claude-usage-rollup.sh --quiet    # rebuild silently (used by cc-track.sh on exit)
+#       ~/.claude/claude-usage-rollup.sh --quiet    # rebuild silently (used by the SessionEnd hook)
 #       ~/.claude/claude-usage-rollup.sh --resolve  # also resolve ALL pending cwd->project
 #                                                    # cache rows in one pass, ignoring the
 #                                                    # per-run cap (one-time backfill; see
@@ -754,8 +754,7 @@ SELECT
   -- marks for a term nobody measured. NULL is skipped by AVG and MAX, so a day
   -- reads the sessions that WERE read, and a day none of whose sessions was
   -- read stores NULL in both; hygiene then drops the context term and rescales
-  -- (below). Both repos read NULL here since Stage 4B: TheOneOS's hours.ts and
-  -- build.ts moved in lockstep (spec 4B §7), proved on the same DB copy.
+  -- (below).
   c.avgctx               AS avgctx,
   c.peakctx              AS peakctx,
   -- NO token columns here, deliberately. _sx is built FROM claude_sessions, so
@@ -814,7 +813,7 @@ SELECT
   -- reading, 0.0 would assert "the context was empty all day" -- a fabricated
   -- measurement of the same class as the status-line token figures Stage 2
   -- removed. NULL is also skipped by AVG() where a fabricated 0.0 would drag the
-  -- average down. CONSUMERS (TheOneOS included) MUST TREAT BOTH COLUMNS AS
+  -- average down. CONSUMERS MUST TREAT BOTH COLUMNS AS
   -- NULLABLE, despite the REAL DEFAULT 0 in the schema.
   s.avgctx, s.peakctx,
   strftime('%s', 'now'),
@@ -1224,8 +1223,8 @@ FROM claude_requests WHERE ts IS NOT NULL;
 CREATE INDEX idx_pf_reqday ON _pf_reqday(rday);
 
 -- One row per request per window it falls in. ALL requests, sidechain
--- included: TheOne's proxy saw every API call, so request-based inputs match
--- that (spec 4.1). Reused verbatim by Task 3.
+-- included: every API call counts, so request-based inputs see them all
+-- (spec 4.1). Reused verbatim by Task 3.
 DROP TABLE IF EXISTS _pf_rq;
 CREATE TEMP TABLE _pf_rq AS
 SELECT w.win, w.day, q.request_id, q.session_id, q.ts, q.model,
@@ -1238,9 +1237,9 @@ CREATE INDEX idx_pf_rq ON _pf_rq(win, day, session_id, ts);
 -- of session statistics (spec 4.1's "unattributed" bucket) -- they still count
 -- in the token totals via _pf_agg below, which reads _pf_rq directly, ungated.
 -- reset: at least one request whose running max of EARLIER cache_read values in
--- (win, day, session) climbed past 80,000 before dropping to under half of it --
--- exactly TheOne's detectContextResets, "at least one", since the peak equals
--- the running max until the first reset (spec 4.3).
+-- (win, day, session) climbed past 80,000 before dropping to under half of it.
+-- "At least one" is enough, since the peak equals the running max until the
+-- first reset (spec 4.3).
 DROP TABLE IF EXISTS _pf_sess;
 CREATE TEMP TABLE _pf_sess AS
 WITH s AS (
@@ -1264,7 +1263,7 @@ SELECT s.win, s.day, s.session_id, s.n, s.span, s.ctx, COALESCE(r.reset, 0) AS r
 FROM s LEFT JOIN r ON r.win = s.win AND r.day = s.day AND r.session_id = s.session_id;
 CREATE INDEX idx_pf_sess ON _pf_sess(win, day);
 
--- TheOne's median: the mean of the two middle values (identical to the single
+-- The median: the mean of the two middle values (identical to the single
 -- middle value when the count is odd, since (c+1)/2 = (c+2)/2 then). Two
 -- separate tables -- not one pivoted -- so the idiom stays exactly the shape
 -- spec 4.1's brief shows it, parameterised only by which column feeds v.
@@ -1308,7 +1307,7 @@ GROUP BY win, day;
 
 -- The four Matrix factors and the Matrix score itself, computed generically for
 -- EVERY (win, day) -- '30' feeds the day's own Matrix card, '7' feeds
--- matrix_7d, '7p' feeds the prior week for matrix_wow. TheOne's H/L helpers,
+-- matrix_7d, '7p' feeds the prior week for matrix_wow. The H/L helpers,
 -- written with the exact arithmetic order spec 4.2 gives them (floating-point
 -- addition is not associative, and a different order can move a .5 rounding
 -- case). f_context / f_session_length are NULL, not a fabricated number, when
@@ -1476,11 +1475,11 @@ CROSS JOIN _pf_evcov ev
 JOIN _pf_agg g ON g.win = '7' AND g.day = w.day
 WHERE w.win = '7' AND w.day = a.d0 AND g.n_requests >= 20;
 
--- Tool calls: MAIN THREAD only (is_sidechain = 0 -- TheOne reads top-level
--- transcripts only, spec 4.1) and only rows whose tool_use side was seen
+-- Tool calls: MAIN THREAD only (is_sidechain = 0 -- top-level transcripts
+-- only, spec 4.1) and only rows whose tool_use side was seen
 -- (tool_name NOT NULL; a result-only row is not a call). A call whose result
 -- never arrived keeps is_error NULL: it counts as a CALL and not as an ERROR
--- (TheOne's errors / toolUses; Review Focus 1). substr, not LIKE: '_' is a
+-- (errors / tool uses; Review Focus 1). substr, not LIKE: '_' is a
 -- LIKE wildcard, so LIKE 'mcp__%' would also match 'mcpXY...'.
 DROP TABLE IF EXISTS _pf_tcday;
 CREATE TEMP TABLE _pf_tcday AS
@@ -1639,7 +1638,7 @@ GROUP BY win, day;
 -- Every input of spec 4.4, one row per _pf_dw (win, day). Tool-covered (†) inputs
 -- are NULL -- not measured -- when the window is not tool-covered; inspect
 -- share and tool-error rate are ALSO NULL when a covered window holds zero
--- tool calls (spec 4.4's first departure: TheOne scores that as a perfect 0%
+-- tool calls (spec 4.4's first departure: zero calls is not a perfect 0%
 -- error rate). Hook-event inputs (compactions, permission modes) are NULL in
 -- the same way when the window is not event-covered (Stage 4B spec 4.5). NULL
 -- here propagates through every part below.
@@ -1671,12 +1670,12 @@ SELECT dw.win, dw.day,
             THEN ev.bypass * 1.0 / ev.prompts_with_mode END                      AS bypass_share,
        COALESCE(md.models, 0) AS models,
        md.top_model,
-       -- TheOne's modelMix[0].pct, arithmetic order and all: the top model's
-       -- share of ALL the window's requests, rounded to a whole percent.
+       -- The top model's share of ALL the window's requests, rounded to a
+       -- whole percent, in this arithmetic order.
        CAST(round((md.top_n * 1.0 / rq.n) * 100) AS INTEGER) AS top_pct,
        rq.n    AS requests,
        rq.errs AS api_errors,
-       -- TheOne's okCount / records.length (spec: 1 - error share).
+       -- Success: 1 - error share (spec).
        (rq.n - rq.errs) * 1.0 / rq.n AS success,
        co.cost_per_session
 FROM _pf_dw dw
@@ -1691,9 +1690,9 @@ LEFT JOIN _pf_wsdk   sdk ON sdk.win = dw.win AND sdk.day = dw.day
 LEFT JOIN _pf_wcost  co  ON co.win  = dw.win AND co.day  = dw.day;
 
 -- Each part, one row per (win, day, discipline, part), 0-100 or NULL (undefined).
--- H and L are TheOne's helpers in TheOne's exact arithmetic order (spec 4.2;
--- the literal subtractions such as (0.4 - 0.05) are deliberate -- that double
--- is not the literal 0.35). clamp(v) is MIN(100, MAX(0, v)); SQLite's
+-- H and L are the helpers, in spec 4.2's exact arithmetic order (the literal
+-- subtractions such as (0.4 - 0.05) are deliberate -- that double is not the
+-- literal 0.35). clamp(v) is MIN(100, MAX(0, v)); SQLite's
 -- multi-argument MIN/MAX return NULL when any argument is NULL, so an
 -- undefined input stays undefined through the clamp.
 DROP TABLE IF EXISTS _pf_parts;
@@ -1774,40 +1773,40 @@ UNION ALL SELECT win, day, 'output-quality',
 -- (spec 4.6 -- numbers, never sentences). ord is the spec's display order.
 DROP TABLE IF EXISTS _pf_ev;
 CREATE TEMP TABLE _pf_ev AS
-SELECT win, day, 'prompt-hygiene' AS discipline, 1 AS ord, 'theone' AS definition,
+SELECT win, day, 'prompt-hygiene' AS discipline, 1 AS ord, 'original' AS definition,
        json_object('slash_kinds', slash_kinds) AS evidence FROM _pf_in
-UNION ALL SELECT win, day, 'context-hygiene', 2, 'theone',
+UNION ALL SELECT win, day, 'context-hygiene', 2, 'original',
        json_object('median_ctx', median_ctx, 'factor', f_context) FROM _pf_in
-UNION ALL SELECT win, day, 'session-hygiene', 3, 'theone',
+UNION ALL SELECT win, day, 'session-hygiene', 3, 'original',
        json_object('median_requests', median_requests, 'long_sessions', long_sessions,
                    'long_with_reset', long_with_reset, 'compactions', compactions,
                    'f_session_length', f_session_length, 'f_compaction', f_compaction,
                    'event_covered', event_covered) FROM _pf_in
-UNION ALL SELECT win, day, 'model-routing', 4, 'theone',
+UNION ALL SELECT win, day, 'model-routing', 4, 'original',
        json_object('models', models, 'top_model', top_model, 'top_pct', top_pct) FROM _pf_in
-UNION ALL SELECT win, day, 'cost-discipline', 5, 'theone',
+UNION ALL SELECT win, day, 'cost-discipline', 5, 'original',
        json_object('cache_fresh_ratio', cache_fresh_ratio, 'factor', f_efficiency,
                    'cost_per_session', cost_per_session) FROM _pf_in
-UNION ALL SELECT win, day, 'verification', 6, 'theone',
+UNION ALL SELECT win, day, 'verification', 6, 'original',
        json_object('tool_calls', tool_calls, 'inspect_share', inspect_share,
                    'tool_error_rate', tool_error_rate) FROM _pf_in
 UNION ALL SELECT win, day, 'automation', 7, 'watchtower',
        json_object('headless_sessions', headless_sessions, 'subagent_launches', subagent_launches,
                    'mcp_calls', mcp_calls) FROM _pf_in
-UNION ALL SELECT win, day, 'reuse', 8, 'theone',
+UNION ALL SELECT win, day, 'reuse', 8, 'original',
        json_object('slash_max_repeat', slash_max_repeat, 'top_command', top_command,
                    'mcp_servers', mcp_servers) FROM _pf_in
 UNION ALL SELECT win, day, 'security', 9, 'watchtower',
        json_object('prompts_with_mode', prompts_with_mode, 'bypass_prompts', bypass_prompts,
                    'bypass_share', bypass_share, 'event_covered', event_covered) FROM _pf_in
-UNION ALL SELECT win, day, 'output-quality', 10, 'theone',
+UNION ALL SELECT win, day, 'output-quality', 10, 'original',
        json_object('requests', requests, 'api_errors', api_errors, 'success', success,
                    'tool_error_rate', tool_error_rate) FROM _pf_in;
 
 -- Every (window, day, discipline) scored once (R2): the mean of its DEFINED
--- parts (SQLite's AVG skips NULLs) scaled to 0-60 as TheOne does it,
+-- parts (SQLite's AVG skips NULLs) scaled to 0-60,
 -- clamp(round(mean/100 * 60), 0, 60). No defined part -> needs-data, 0.
--- Status: TheOne's statusFor.
+-- Status: strong from 45, ok from 30, else needs-work.
 DROP TABLE IF EXISTS _pf_sc;
 CREATE TEMP TABLE _pf_sc AS
 SELECT e.win, e.day, e.discipline, e.ord, e.definition, e.evidence, s.score,
@@ -1837,7 +1836,7 @@ CREATE UNIQUE INDEX idx_pf_scores7d ON _pf_scores7d(day, discipline);
 INSERT INTO _pf_scores7d (day, discipline, score, status)
 SELECT day, discipline, score, status FROM _pf_sc WHERE win = '7' ORDER BY day, ord;
 
--- Total (needs-data counts 0, as in TheOne), how many of the ten measured,
+-- Total (needs-data counts 0), how many of the ten measured,
 -- and the 6-tier ladder: Noobie .. Master, min(5, total / 100) -- integer
 -- division is floor here since total >= 0. Points to next is NULL at Master.
 UPDATE _pf_profile
@@ -1850,7 +1849,7 @@ SET tier_index = MIN(5, total / 100),
     tier_points_to_next = CASE WHEN MIN(5, total / 100) = 5 THEN NULL
                                ELSE (MIN(5, total / 100) + 1) * 100 - total END
 WHERE total IS NOT NULL;
--- Total week over week (new, not in TheOne): total(D) - total(D-7), NULL when
+-- Total week over week: total(D) - total(D-7), NULL when
 -- either is NULL -- a gated D-7 or no D-7 row at all.
 UPDATE _pf_profile
 SET total_wow = total - (SELECT p7.total FROM _pf_profile p7

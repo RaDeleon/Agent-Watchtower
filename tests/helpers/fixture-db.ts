@@ -24,7 +24,7 @@ export const NO_CLAUDE_DIR = path.join(tmpdir(), "wt-no-claude-dir-never-created
  */
 export function rerollup(db: string, args: string[] = [], extraEnv: Record<string, string> = {}): SpawnSyncReturns<string> {
   return spawnSync("bash", [ROLLUP, ...args], {
-    env: { ...process.env, THEONE_DB_PATH: db, CC_LIB_PATH: LIB, TZ: "UTC", CLAUDE_DIR: NO_CLAUDE_DIR, ...extraEnv },
+    env: { ...process.env, WATCHTOWER_DB_PATH: db, CC_LIB_PATH: LIB, TZ: "UTC", CLAUDE_DIR: NO_CLAUDE_DIR, ...extraEnv },
     encoding: "utf8",
   });
 }
@@ -35,7 +35,7 @@ export function buildAndRoll(scenario: string, extraEnv: Record<string, string> 
   const db = path.join(dir, "fixture.sqlite");
   execFileSync("bash", [MAKE, scenario, db], { encoding: "utf8" });
   execFileSync("bash", [ROLLUP, "--quiet"], {
-    env: { ...process.env, THEONE_DB_PATH: db, CC_LIB_PATH: LIB, TZ: "UTC", CLAUDE_DIR: NO_CLAUDE_DIR, ...extraEnv },
+    env: { ...process.env, WATCHTOWER_DB_PATH: db, CC_LIB_PATH: LIB, TZ: "UTC", CLAUDE_DIR: NO_CLAUDE_DIR, ...extraEnv },
     encoding: "utf8",
   });
   return db;
@@ -60,7 +60,7 @@ export function ingestAndRoll(scenarios: string[], extraEnv: Record<string, stri
   const db = path.join(dbDir, "fixture.sqlite");
   // WATCHTOWER_DB_PATH as well as the deprecated alias: it wins in lib.sh, so a
   // value inherited from the caller's shell can never redirect the run.
-  const env = { ...process.env, THEONE_DB_PATH: db, WATCHTOWER_DB_PATH: db, CC_LIB_PATH: LIB,
+  const env = { ...process.env, WATCHTOWER_DB_PATH: db, CC_LIB_PATH: LIB,
                 WATCHTOWER_TRANSCRIPTS_DIR: tx, TZ: "UTC", CLAUDE_DIR: NO_CLAUDE_DIR, ...extraEnv };
   execFileSync("bash", ["-c", '. "$CC_LIB_PATH" && cc_init_db'], { env, encoding: "utf8" });
   execFileSync("bash", [INGEST, "--quiet"], { env, encoding: "utf8" });

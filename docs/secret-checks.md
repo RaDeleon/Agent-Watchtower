@@ -17,9 +17,9 @@ node script/check-secrets.ts --history   # every locally available ref
 - transcripts and other `*.jsonl` or `*.ndjson`, and logs;
 - live configuration (`settings.json`, `settings.local.json`, Codex's `auth.json`, `ovcli.conf`, `watchtower.config.json`, and `.env` files other than `.env.example`);
 - key files;
-- local agent state directories (`.claude/`, `.codex/`, `.hermes/`, `.theone/`, `.openviking/`, `.atlas/`).
+- local agent state directories (`.claude/`, `.codex/`, `.hermes/`, `.watchtower/`, `.openviking/`, `.atlas/`).
 
-The rules are in `script/artifact-policy.ts`. `watchtower.config.example.json` and `.env.example` remain allowed as templates. Watchtower's real data lives outside the repository, in `~/.theone/claude-code-usage.sqlite` and `~/.claude/projects/`. These rules stop a copy of it from being committed by accident.
+The rules are in `script/artifact-policy.ts`. `watchtower.config.example.json` and `.env.example` remain allowed as templates. Watchtower's real data lives outside the repository, in `~/.watchtower/watchtower.sqlite` and `~/.claude/projects/`. These rules stop a copy of it from being committed by accident.
 
 **History mode** scans the patches of every local ref. Run `git fetch --all` first so that every branch is covered. To include the pull-request heads GitHub keeps (they stay reachable after a branch is deleted), run `git fetch origin '+refs/pull/*/head:refs/pr-audit/*'` and delete those refs afterwards.
 

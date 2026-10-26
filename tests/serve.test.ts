@@ -58,7 +58,7 @@ describe("dashboard server", () => {
     expect(html).toContain('<a class="pill t-agent" href="/hermes">Hermes</a>');
     expect(html).not.toContain("pill soon");
     // The settings popover offers all five themes by label.
-    for (const label of ["TheOne amber", "Claude", "SF Giants", "Toronto Raptors", "Buffalo Bills"]) {
+    for (const label of ["Amber", "Claude", "SF Giants", "Toronto Raptors", "Buffalo Bills"]) {
       expect(html).toContain(`>${label}</button>`);
     }
     expect(html).toContain('data-set-nav="sidebar"');

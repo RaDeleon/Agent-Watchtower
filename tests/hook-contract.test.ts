@@ -54,12 +54,12 @@ function makeEnv(withFakeClock: boolean): Env {
     db: path.join(dir, "hook.sqlite"),
     env: {
       // HOME and CLAUDE_DIR both point at throwaway dirs: lib.sh defaults the DB
-      // to $HOME/.theone and the library to $HOME/.claude, and this test must
+      // to $HOME/.watchtower and the library to $HOME/.claude, and this test must
       // never be able to reach the real ones even if an override is dropped.
       HOME: home,
       CLAUDE_DIR: claudeDir,
       CC_LIB_PATH: LIB,
-      THEONE_DB_PATH: path.join(dir, "hook.sqlite"),
+      WATCHTOWER_DB_PATH: path.join(dir, "hook.sqlite"),
       PATH: withFakeClock ? `${bin}:${process.env.PATH}` : (process.env.PATH ?? ""),
     },
   };

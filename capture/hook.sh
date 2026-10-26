@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# cc-track-hook.sh — universal Claude Code hook writer for TheOne's usage tracker.
+# cc-track-hook.sh — universal Claude Code hook writer for Watchtower.
 #
 # Registered on SessionStart, SessionEnd, UserPromptSubmit, Stop, SubagentStart,
 # SubagentStop, PreCompact, PostCompact. Reads the hook JSON on stdin, writes one
@@ -44,8 +44,6 @@ proj="$(cc_project_path "$cwd")"
 repo=""
 if [ -n "$proj" ]; then repo="${proj##*/}"; elif [ -n "$cwd" ]; then repo="${cwd##*/}"; fi
 term="$(cc_terminal_app)"
-launch="${THEONE_LAUNCH_ID:-}"
-profile="${THEONE_PROFILE:-}"
 
 # PII-light payload: keep only the event-shaping fields + prompt LENGTH (never the text).
 payload="$(printf '%s' "$input" | jq -c '{
@@ -59,27 +57,25 @@ payload="$(printf '%s' "$input" | jq -c '{
 # ---- encode literals -------------------------------------------------------
 Lsession=$(cc_sqlstr "$session"); Lcwd=$(cc_sqlstr "$cwd"); Lrepo=$(cc_sqlstr "$repo")
 Lproj=$(cc_sqlstr "$proj")
-Lmodel=$(cc_sqlstr "$model");     Lterm=$(cc_sqlstr "$term"); Llaunch=$(cc_sqlstr "$launch")
-Lprofile=$(cc_sqlstr "$profile"); Levent=$(cc_sqlstr "$event"); Lsource=$(cc_sqlstr "$source_v")
+Lmodel=$(cc_sqlstr "$model");     Lterm=$(cc_sqlstr "$term")
+Levent=$(cc_sqlstr "$event");     Lsource=$(cc_sqlstr "$source_v")
 Lreason=$(cc_sqlstr "$reason_v"); Lpayload=$(cc_sqlstr "$payload")
 
 # ---- build one SQL batch ---------------------------------------------------
-sql="INSERT INTO claude_events (ts, session_id, launch_id, hook_event_name, cwd, repo, project_path, model, terminal_app, payload_json)
-     VALUES ($ts, $Lsession, $Llaunch, $Levent, $Lcwd, $Lrepo, $Lproj, $Lmodel, $Lterm, $Lpayload);"
+sql="INSERT INTO claude_events (ts, session_id, hook_event_name, cwd, repo, project_path, model, terminal_app, payload_json)
+     VALUES ($ts, $Lsession, $Levent, $Lcwd, $Lrepo, $Lproj, $Lmodel, $Lterm, $Lpayload);"
 
 if [ -n "$session" ]; then
   # Ensure the session row exists (SessionStart may have been missed on resume).
   sql="$sql
-  INSERT OR IGNORE INTO claude_sessions (session_id, launch_id, terminal_app, profile, cwd, repo, project_path, model, started_at, updated_at)
-    VALUES ($Lsession, $Llaunch, $Lterm, $Lprofile, $Lcwd, $Lrepo, $Lproj, $Lmodel, $ts, $ts);"
+  INSERT OR IGNORE INTO claude_sessions (session_id, terminal_app, cwd, repo, project_path, model, started_at, updated_at)
+    VALUES ($Lsession, $Lterm, $Lcwd, $Lrepo, $Lproj, $Lmodel, $ts, $ts);"
 
   case "$event" in
     SessionStart)
       sql="$sql
       UPDATE claude_sessions SET
-        launch_id    = COALESCE($Llaunch, launch_id),
         terminal_app = COALESCE($Lterm, terminal_app),
-        profile      = COALESCE($Lprofile, profile),
         cwd          = COALESCE($Lcwd, cwd),
         repo         = COALESCE($Lrepo, repo),
         model        = COALESCE($Lmodel, model),

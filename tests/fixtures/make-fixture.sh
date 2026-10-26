@@ -9,7 +9,7 @@ scenario="${1:?scenario required}"
 db="${2:?db path required}"
 lib="$(cd "$(dirname "$0")/../../capture" && pwd)/lib.sh"
 
-export THEONE_DB_PATH="$db"
+export WATCHTOWER_DB_PATH="$db"
 # shellcheck source=/dev/null
 . "$lib"
 cc_init_db
@@ -1085,8 +1085,8 @@ case "$scenario" in
       tc_at "TPF$n" S_PF_A "$((T + n * 10))" "${spec%%:*}" "${spec#*:}" 0
       n=$((n + 1))
     done
-    # NOT counted: four SIDECHAIN calls (TheOne reads top-level transcripts
-    # only), a result-only row with no tool name, and the coverage anchor on
+    # NOT counted: four SIDECHAIN calls (only top-level transcripts count),
+    # a result-only row with no tool name, and the coverage anchor on
     # 2026-08-01 (main thread, so coverage_start = 2026-08-01 <= 2026-08-12:
     # the window is tool-covered).
     tc_at TPFS0 S_PF_A "$((T + 500))" Bash 1 1

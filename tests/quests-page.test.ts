@@ -21,7 +21,7 @@ const NOW = 1791720000; // 2026-10-11T12:00:00Z
 /** A fresh v10 database in its own directory (the .schema-vN marker is per directory). */
 function freshDb(): string {
   const db = path.join(mkdtempSync(path.join(tmpdir(), "wt-quests-")), "fixture.sqlite");
-  execFileSync("bash", ["-c", '. "$CC_LIB" && cc_init_db'], { env: { ...process.env, THEONE_DB_PATH: db, CC_LIB: LIB } });
+  execFileSync("bash", ["-c", '. "$CC_LIB" && cc_init_db'], { env: { ...process.env, WATCHTOWER_DB_PATH: db, CC_LIB: LIB } });
   return db;
 }
 const sql = (db: string, s: string) => execFileSync("sqlite3", ["-bail", db, s], { encoding: "utf8" });

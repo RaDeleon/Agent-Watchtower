@@ -41,7 +41,7 @@ Do not add AI attribution, such as `Co-Authored-By` trailers or "Generated with"
 
 This is a public repository about one person's usage, so it is easy to leak details by accident. The pre-commit hook enforces these rules:
 
-- **Paths:** write `~/.claude`, `$HOME/.theone` or a path relative to the repository. Where an absolute path is needed, use a placeholder user such as `/Users/you`.
+- **Paths:** write `~/.claude`, `$HOME/.watchtower` or a path relative to the repository. Where an absolute path is needed, use a placeholder user such as `/Users/you`.
 - **Names:** do not name clients, employers or private projects, and do not quote hours or costs tied to them. Refer to them generically.
 - **Ids and email:** do not paste real request ids, session ids or email addresses. Commit with your GitHub noreply address.
 - **Private notes:** keep them in `SESSION.md`, under `.private/`, or, for agent build logs, under `.superpowers/`. All three are gitignored and refused by name.

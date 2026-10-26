@@ -76,26 +76,15 @@ export function expandHome(p: string): string {
   return p;
 }
 
-/** The pre-Stage-3 location. An install that already has one never moves off it. */
-export function legacyDbPath(): string {
-  return path.join(os.homedir(), ".theone", "claude-code-usage.sqlite");
-}
-
-/** Where a machine with no legacy database starts. */
-export function freshDbPath(): string {
-  return path.join(os.homedir(), ".watchtower", "watchtower.sqlite");
-}
-
 /**
- * Default database path: the legacy file where it exists, else the fresh one.
+ * Default database path.
  *
  * `capture/lib.sh`'s cc_db_path MUST resolve identically. It is the writer and
  * this is the reader; every write on the hook path swallows its own error, so a
  * split between them surfaces as an empty dashboard, not as a failure.
  */
-function defaultDbPath(exists: (p: string) => boolean): string {
-  const legacy = legacyDbPath();
-  return exists(legacy) ? legacy : freshDbPath();
+export function defaultDbPath(): string {
+  return path.join(os.homedir(), ".watchtower", "watchtower.sqlite");
 }
 
 function syncSecondsOf(v: unknown, raw: unknown, where: string): number {
@@ -112,10 +101,10 @@ export function entryLists(id: "codex" | "hermes", sc: SourceConfig | undefined)
   return { driven: sc?.driven ?? [...d], automated: sc?.automated ?? [...a] };
 }
 
-function defaults(exists: (p: string) => boolean): WatchtowerConfig {
+function defaults(): WatchtowerConfig {
   return {
     schemaVersion: 11,
-    database: { path: defaultDbPath(exists) },
+    database: { path: defaultDbPath() },
     capture: { installDir: path.join(os.homedir(), ".claude") },
     coach: { mode: "cli", apiKey: null },
     projectGroups: {},
@@ -179,8 +168,6 @@ export function loadConfig(
   opts: {
     configPath?: string;
     env?: NodeJS.ProcessEnv;
-    /** Injected so both branches of the default path are testable on any machine. */
-    fileExists?: (p: string) => boolean;
     /** Where to look first for the config file. Defaults to `process.cwd()`. */
     cwd?: string;
     /** The checkout whose config file is the fallback. Defaults to this one. */
@@ -188,10 +175,9 @@ export function loadConfig(
   } = {}
 ): WatchtowerConfig {
   const env = opts.env ?? process.env;
-  const fileExists = opts.fileExists ?? existsSync;
   const configPath = opts.configPath
     ?? configFileFor(opts.cwd ?? process.cwd(), opts.checkoutDir ?? CHECKOUT_DIR);
-  const cfg = defaults(fileExists);
+  const cfg = defaults();
 
   if (configPath !== null && existsSync(configPath)) {
     let parsed: unknown;
@@ -349,7 +335,6 @@ export function loadConfig(
     }
   }
 
-  if (env.THEONE_DB_PATH) cfg.database.path = expandHome(env.THEONE_DB_PATH);
   if (env.WATCHTOWER_DB_PATH) cfg.database.path = expandHome(env.WATCHTOWER_DB_PATH);
   if (typeof env.WATCHTOWER_SYNC_SECONDS === "string" && env.WATCHTOWER_SYNC_SECONDS !== "") {
     cfg.dashboard.syncSeconds = syncSecondsOf(

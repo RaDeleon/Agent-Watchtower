@@ -19,7 +19,7 @@ export function ingestScenario(scenario: string, args: string[] = []): string {
   execFileSync("bash", [MAKE_TX, scenario, tx], { encoding: "utf8" });
   const db = path.join(dbDir, "fixture.sqlite");
   execFileSync("bash", [INGEST, "--quiet", ...args], {
-    env: { ...process.env, THEONE_DB_PATH: db, CC_LIB_PATH: LIB,
+    env: { ...process.env, WATCHTOWER_DB_PATH: db, CC_LIB_PATH: LIB,
            WATCHTOWER_TRANSCRIPTS_DIR: tx, TZ: "UTC" },
     encoding: "utf8",
   });
@@ -33,7 +33,7 @@ export function q(db: string, sql: string): string {
  *  both the MAX-rule and idempotence tests can drive separate ingest runs. */
 function reingest(db: string, tx: string, args: string[] = []): void {
   execFileSync("bash", [INGEST, "--quiet", ...args], {
-    env: { ...process.env, THEONE_DB_PATH: db, CC_LIB_PATH: LIB,
+    env: { ...process.env, WATCHTOWER_DB_PATH: db, CC_LIB_PATH: LIB,
            WATCHTOWER_TRANSCRIPTS_DIR: tx, TZ: "UTC" }, encoding: "utf8" });
 }
 const txOf = (db: string) => path.join(path.dirname(path.dirname(db)), "projects");
@@ -218,7 +218,7 @@ describe("robustness", () => {
     execFileSync("mkdir", ["-p", tx, path.dirname(db)]);
     execFileSync("bash", [MAKE_TX, "single", tx], { encoding: "utf8" });
     execFileSync("bash", ["-c", '. "$CC_LIB_PATH" && cc_init_db'], {
-      env: { ...process.env, THEONE_DB_PATH: db, CC_LIB_PATH: LIB },
+      env: { ...process.env, WATCHTOWER_DB_PATH: db, CC_LIB_PATH: LIB },
     });
     q(db, `CREATE TRIGGER planted_failure BEFORE INSERT ON claude_requests
            BEGIN SELECT RAISE(ABORT, 'planted'); END;`);
@@ -250,7 +250,7 @@ describe("robustness", () => {
       `#!/bin/sh\nfor a in "$@"; do case "$a" in rowsf=*) exit 1 ;; esac; done\nexec "${realAwk}" "$@"\n`,
       { mode: 0o755 });
     execFileSync("bash", [INGEST, "--quiet"], {
-      env: { ...process.env, PATH: `${shim}:${process.env.PATH}`, THEONE_DB_PATH: db, CC_LIB_PATH: LIB,
+      env: { ...process.env, PATH: `${shim}:${process.env.PATH}`, WATCHTOWER_DB_PATH: db, CC_LIB_PATH: LIB,
              WATCHTOWER_TRANSCRIPTS_DIR: tx, TZ: "UTC" }, encoding: "utf8" });
     expect(q(db, "SELECT count(*) FROM claude_requests;")).toBe("0");
     expect(q(db, "SELECT count(*) FROM claude_ingest_cursor;")).toBe("0");
@@ -275,7 +275,7 @@ describe("robustness", () => {
       `#!/bin/sh\nfor a in "$@"; do case "$a" in cf=*) exit 1 ;; esac; done\nexec "${realAwk}" "$@"\n`,
       { mode: 0o755 });
     execFileSync("bash", [INGEST, "--quiet"], {
-      env: { ...process.env, PATH: `${shim}:${process.env.PATH}`, THEONE_DB_PATH: db, CC_LIB_PATH: LIB,
+      env: { ...process.env, PATH: `${shim}:${process.env.PATH}`, WATCHTOWER_DB_PATH: db, CC_LIB_PATH: LIB,
              WATCHTOWER_TRANSCRIPTS_DIR: tx, TZ: "UTC" }, encoding: "utf8" });
     expect(q(db, "SELECT count(*) FROM claude_requests;")).toBe("0");
     expect(q(db, "SELECT count(*) FROM claude_ingest_cursor;")).toBe("0");
@@ -288,7 +288,7 @@ describe("robustness", () => {
     const dir = mkdtempSync(path.join(tmpdir(), "wt-noTx-"));
     const db = path.join(dir, "fixture.sqlite");
     const out = execFileSync("bash", [INGEST, "--quiet"], {
-      env: { ...process.env, THEONE_DB_PATH: db, CC_LIB_PATH: LIB,
+      env: { ...process.env, WATCHTOWER_DB_PATH: db, CC_LIB_PATH: LIB,
              WATCHTOWER_TRANSCRIPTS_DIR: path.join(dir, "nope"), TZ: "UTC" },
       encoding: "utf8",
     });
@@ -561,7 +561,7 @@ describe("Stage 4B capture", () => {
     addScenario(tx, "turn-kinds");
     addScenario(tx, "single");
     execFileSync("bash", ["-c", '. "$CC_LIB_PATH" && cc_init_db'], {
-      env: { ...process.env, THEONE_DB_PATH: db, CC_LIB_PATH: LIB },
+      env: { ...process.env, WATCHTOWER_DB_PATH: db, CC_LIB_PATH: LIB },
     });
     q(db, `CREATE TRIGGER planted_failure BEFORE INSERT ON claude_prompts
            BEGIN SELECT RAISE(ABORT, 'planted'); END;`);
@@ -637,7 +637,7 @@ describe("Stage 4B capture", () => {
       `"${realJq}" "$@" < "$in"; rc=$?\nrm -f "$in"\nexit $rc\n`,
       { mode: 0o755 });
     execFileSync("bash", [INGEST, "--quiet"], {
-      env: { ...process.env, PATH: `${shim}:${process.env.PATH}`, THEONE_DB_PATH: db, CC_LIB_PATH: LIB,
+      env: { ...process.env, PATH: `${shim}:${process.env.PATH}`, WATCHTOWER_DB_PATH: db, CC_LIB_PATH: LIB,
              WATCHTOWER_TRANSCRIPTS_DIR: tx, TZ: "UTC" }, encoding: "utf8" });
     expect(q(db, "SELECT group_concat(request_id) FROM (SELECT request_id FROM claude_requests ORDER BY 1);"))
       .toBe("req_a,req_b");

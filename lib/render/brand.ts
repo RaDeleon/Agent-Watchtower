@@ -1,6 +1,6 @@
 /**
  * The Watchtower crest: a tower inside a heraldic shield, on a 64-unit grid.
- * One drawing has three uses. The favicon is always TheOne amber, so a tab
+ * One drawing has three uses. The favicon is always amber, so a tab
  * keeps its icon whichever theme is active. The mark beside the wordmark takes
  * the active theme's colours through classes that layout.ts styles. And the
  * logo, banner and social preview under docs/assets/ draw the same paths, which
@@ -46,7 +46,7 @@ export function crestSvg(p: CrestPaint): string {
     `<path fill="${p.ground}" d="${CREST.door}"/></svg>`;
 }
 
-/** TheOne amber, the default theme, whichever theme is active. */
+/** Amber, the default theme, whichever theme is active. */
 export const AMBER: CrestPaint = { mark: LIFT.amber.mark, light: TOKENS.amber.label, ground: TOKENS.amber.bg };
 
 /**
