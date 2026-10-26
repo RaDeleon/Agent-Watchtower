@@ -24,7 +24,7 @@ describe("home-directory paths", () => {
 
   it("allows the placeholder names that docs and fixtures use", () => {
     for (const n of ["you", "x", "a", "fx", "runner", "user", "Shared"]) expect(homeNames(mac(n))).toEqual([]);
-    expect(homeNames("~/.claude/projects and $HOME/.theone")).toEqual([]);
+    expect(homeNames("~/.claude/projects and $HOME/.watchtower")).toEqual([]);
   });
 });
 

@@ -187,7 +187,7 @@ Ensure `~/.local/bin` is on your PATH. The link points at this checkout, so keep
 | **Codex / Hermes** | Each tool's usage and progression, with source-specific cost labels. |
 | **Sources** | Detection, ingestion status and provenance. |
 
-The gear at the top right opens Settings: five colour themes (TheOne amber, Claude, SF Giants, Toronto Raptors and Buffalo Bills) and pill or sidebar navigation. Your choice is kept in the browser and applied before the page paints. The historical pages have range controls. Live polls every **5 seconds** by default; background source sync runs every **300 seconds** while the server is running.
+The gear at the top right opens Settings: five colour themes (Amber, Claude, SF Giants, Toronto Raptors and Buffalo Bills) and pill or sidebar navigation. Your choice is kept in the browser and applied before the page paints. The historical pages have range controls. Live polls every **5 seconds** by default; background source sync runs every **300 seconds** while the server is running.
 
 ```bash
 watchtower                         # open or reuse the background dashboard
@@ -250,7 +250,6 @@ flowchart LR
     R --> D[(Local SQLite: derived history)]
     D --> U[Local dashboard]
     D --> F[Self-contained HTML report]
-    D --> E[TheOneOS readers: separate repo]
 ```
 
 The database is the shared interface. Capture writes raw evidence; adapters normalize source records; `capture/rollup.sh` owns the time, scoring, pricing and progression formulas. TypeScript readers and renderers query, group and label the stored results.
@@ -299,7 +298,7 @@ For example, this keeps Claude and Codex enabled and disables the other sources:
 | `dashboard.host` | Loopback only: `127.0.0.1`, `localhost` or `::1`. |
 | `dashboard.syncSeconds` | Background sync interval: `0` disables it; enabled intervals must be at least 60 seconds. |
 
-**Database defaults:** new installations use `~/.watchtower/watchtower.sqlite`. If `~/.theone/claude-code-usage.sqlite` already exists, Watchtower keeps using that legacy database. `WATCHTOWER_DB_PATH` overrides both capture and readers; `THEONE_DB_PATH` is also supported, with lower precedence. Make a custom path available to both your Claude Code environment and your dashboard commands.
+**Database:** `~/.watchtower/watchtower.sqlite`. `WATCHTOWER_DB_PATH` overrides it for capture and readers alike, so make a custom path available to both your Claude Code environment and your dashboard commands.
 
 `WATCHTOWER_DASHBOARD_PORT` and `WATCHTOWER_SYNC_SECONDS` override dashboard settings. The checked-in [example config](watchtower.config.example.json) is a historical minimal example; current defaults are in [lib/config.ts](lib/config.ts). Its `coach` field is a placeholder and does not enable a working coach.
 

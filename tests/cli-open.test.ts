@@ -108,7 +108,7 @@ function setup() {
   const cli = (args: string[], extraEnv: Record<string, string> = {}): Promise<Run> => {
     const env: NodeJS.ProcessEnv = { ...process.env };
     delete env.WATCHTOWER_DASHBOARD_PORT;
-    Object.assign(env, { THEONE_DB_PATH: db, WATCHTOWER_DB_PATH: db, WATCHTOWER_BROWSER: browser, WATCHTOWER_SYNC_SECONDS: "0", HOME: home }, extraEnv);
+    Object.assign(env, { WATCHTOWER_DB_PATH: db, WATCHTOWER_BROWSER: browser, WATCHTOWER_SYNC_SECONDS: "0", HOME: home }, extraEnv);
     const started = Date.now();
     return new Promise((resolve, reject) => {
       // The scratch cwd has no config, so the checkout's watchtower.config.json (gitignored; setup writes

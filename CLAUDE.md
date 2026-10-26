@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-npm test                              # vitest run — the whole suite (1324 tests, 82 files)
+npm test                              # vitest run — the whole suite (1316 tests, 82 files)
 npm run typecheck                     # tsc --noEmit
 npm run lint                          # pinned ShellCheck over the scripts
 npm run release -- v1.1.0 [--dry-run] # build, verify and publish a pushed tag's release from this machine
@@ -55,7 +55,7 @@ The crest (favicon, header mark, `docs/assets/`) is drawn once in `lib/render/br
 
 This repository is public. Nothing committed may identify the user, a client or a machine:
 
-- **No home paths.** Write `~/.claude`, `$HOME/.theone` or a path relative to the repo. Where
+- **No home paths.** Write `~/.claude`, `$HOME/.watchtower` or a path relative to the repo. Where
   an absolute path is the point (a fixture, an example), use a placeholder user such as
   `/Users/you`. `check-privacy.ts` allows only the placeholder names in its
   `PLACEHOLDER_NAMES`.
@@ -88,8 +88,7 @@ Since Stage 5 Codex and Hermes are first-class beside Claude: their hours, Codex
 API prices and an OSRS level for every tool come from the same database. OpenViking and
 Atlas are a light touch (a health probe and a provenance link, no hours, no level). The
 standalone dashboard (generated HTML served by `node:http`, zero runtime deps) has Overview,
-Codex and Hermes beside the Claude pages. TheOneOS (`lib/claude-hours/`, a **different
-repository**) reads the same database directly. Stage 3's brainstorm,
+Codex and Hermes beside the Claude pages. Stage 3's brainstorm,
 `docs/superpowers/specs/2026-09-12-stage-3-dashboard-brainstorm.md`, is the history of that UI.
 
 `lib/config.ts` carries a `coach` stanza that **nothing implements** — a placeholder from
@@ -101,7 +100,7 @@ grow one. Do not reintroduce it.
 
 ```
 Claude Code hooks ─┐
-status line ───────┼─→ ~/.theone/claude-code-usage.sqlite ←─ TheOneOS dashboard (other repo)
+status line ───────┼─→ ~/.watchtower/watchtower.sqlite ←─ dashboard, report, TS readers
 ~/.claude/projects ┘        ▲
    transcripts        capture/rollup.sh rebuilds the derived tables
 ```
@@ -372,27 +371,17 @@ Total level**.
 
 ## Working against the live system
 
-- `~/.claude/` is the **live** Claude Code install; `~/.theone/` holds the **real** usage
+- `~/.claude/` is the **live** Claude Code install; `~/.watchtower/` holds the **real** usage
   database. Read freely; write only through `capture/install.sh`, and only when asked.
 - **Never run `install.sh` without `CLAUDE_DIR`** pointed at a temp dir, unless a live
   install was explicitly requested — it defaults to `$HOME/.claude`. Dry-run into a temp
   dir seeded from the live config first and diff `settings.json`; that has caught real
   hook-deletion bugs.
 - **Never test against the live DB.** Copy it with `sqlite3 .backup` (not `cp` — it is WAL)
-  and point `THEONE_DB_PATH` at the copy.
+  and point `WATCHTOWER_DB_PATH` at the copy.
 - **The `.schema-vN` marker lives in the database's *directory*.** Two databases in one
   directory share a marker and the second silently gets no schema. Give every side-by-side
   comparison its own directory. This has bitten three separate times.
-- **Lockstep with `TheOneOS/lib/claude-hours/`**, which recomputes from the raw tables and
-  ignores the rollups. Any change to the model must be re-proved against it *numerically*
-  (column aliases are not part of the model), by running its `PER_SESSION_SQL` against the
-  same DB copy the shell rollup just processed. Its tokens come from `PER_DAY_TOKENS_SQL`,
-  which is `_dtok` verbatim; its hygiene must equal `hygiene_score` exactly.
-  `tests/fixtures/theone-token-proof.mjs` checks both, run by hand.
-  Beside it, `tests/fixtures/theone-watch-proof.mjs` proves TheOneOS's Claude Code tab
-  (`lib/watchtower/`) against `lib/read/perf.ts`, `lib/read/profile.ts` and
-  `lib/render/profile.ts`, and that the Hours payload is unchanged; run it by hand with
-  `--all` on a rolled-up DB copy.
 
 ## Testing conventions
 

@@ -73,7 +73,7 @@ function sh(script: string, env: Record<string, string>): string {
 function buildBigArchive(): string {
   const dir = mkdtempSync(path.join(tmpdir(), "wt-scale-"));
   const db = path.join(dir, "archive.sqlite");
-  sh('. "$CC_LIB" && cc_init_db', { THEONE_DB_PATH: db, CC_LIB: LIB });
+  sh('. "$CC_LIB" && cc_init_db', { WATCHTOWER_DB_PATH: db, CC_LIB: LIB });
 
   const rows = `WITH RECURSIVE s(i) AS
     (SELECT 1 UNION ALL SELECT i+1 FROM s WHERE i < ${N})`;

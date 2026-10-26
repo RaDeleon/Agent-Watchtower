@@ -331,7 +331,7 @@ describe("watchtower report", () => {
     const cwd = mkdtempSync(path.join(tmpdir(), "wt-report-"));
     const r = spawnSync("node", [BIN, "report", ...args], {
       cwd, encoding: "utf8",
-      env: { ...process.env, WATCHTOWER_DB_PATH: dbPath, THEONE_DB_PATH: dbPath, TZ: "UTC", ...env },
+      env: { ...process.env, WATCHTOWER_DB_PATH: dbPath, TZ: "UTC", ...env },
     });
     return { ...r, cwd };
   }

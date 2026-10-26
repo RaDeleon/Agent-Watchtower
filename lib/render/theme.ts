@@ -17,7 +17,7 @@ export type ThemeId = "amber" | "claude" | "giants" | "raptors" | "bills";
 export const THEMES: readonly ThemeId[] = ["amber", "claude", "giants", "raptors", "bills"];
 
 export const THEME_LABELS: Record<ThemeId, string> = {
-  amber: "TheOne amber",
+  amber: "Amber",
   claude: "Claude",
   giants: "SF Giants",
   raptors: "Toronto Raptors",

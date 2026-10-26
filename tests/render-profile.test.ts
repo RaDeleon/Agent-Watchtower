@@ -232,19 +232,14 @@ describe("profileView: the ten discipline cards", () => {
     // Status is a WORD, not only a colour.
     for (const word of ["strong", "ok", "needs work"]) expect(html).toContain(`>${word}<`);
 
-    // Exactly automation and security carry the badge.
-    expect((html.match(/<span class="chip">Watchtower definition<\/span>/g) ?? []).length).toBe(2);
-    const automation = html.slice(html.indexOf("<h2>Automation discipline"), html.indexOf("<h2>Reuse"));
-    const security = html.slice(html.indexOf("<h2>Security"), html.indexOf("<h2>Output quality"));
-    expect(automation).toContain("Watchtower definition");
-    expect(security).toContain("Watchtower definition");
+    // No card carries a definition badge: every discipline is defined here.
+    expect(html).not.toContain("Watchtower definition");
     const verification = html.slice(html.indexOf("<h2>Verification"), html.indexOf("<h2>Automation"));
-    expect(verification).not.toContain("Watchtower definition");
 
     // A 0-60 bar: verification scores 44 (mean of H(0.4,0.1,0.5)=75 and L(0.15,0.05,0.4)=71 -> round(146/2/100*60)).
     expect(verification).toContain('aria-valuemax="60"');
 
-    // Evidence, TheOne's wording, exact numbers from the fixture's hand arithmetic.
+    // Evidence, exact numbers from the fixture's hand arithmetic.
     expect(verification).toContain("20 tool calls");
     expect(verification).toContain("40% of tool calls inspect code (Read/Grep/Glob)");
     expect(verification).toContain("15% tool-error rate");

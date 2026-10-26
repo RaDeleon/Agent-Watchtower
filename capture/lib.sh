@@ -1,18 +1,17 @@
 #!/usr/bin/env bash
-# cc-track-lib.sh — shared helpers for TheOne's Claude Code usage tracker.
+# cc-track-lib.sh — shared helpers for Watchtower's Claude Code usage tracker.
 #
-# Sourced by:  cc-track.sh (launcher), hooks/cc-track-hook.sh (event writer),
-#              claude-usage-rollup.sh (daily rollup), and ~/.claude/statusline.sh
-#              (throttled status snapshots).
+# Sourced by:  hooks/cc-track-hook.sh (event writer), watchtower-ingest.sh
+#              (transcripts), claude-usage-rollup.sh (daily rollup) and
+#              watchtower-snapshot.sh (throttled status snapshots).
 #
 # Owns the single source of truth for the SQLite schema and every DB write, so
 # the whole system stays concurrency-safe (WAL + busy_timeout) and fail-safe:
 # every DB call is best-effort and NEVER aborts the caller — a broken tracker
-# must never break Claude Code, your launcher, or your status line.
+# must never break Claude Code or your status line.
 #
-# The database lives at ~/.theone/claude-code-usage.sqlite on any install that
-# already has one, and at ~/.watchtower/watchtower.sqlite on a fresh machine
-# (override WATCHTOWER_DB_PATH, or the deprecated THEONE_DB_PATH alias).
+# The database lives at ~/.watchtower/watchtower.sqlite (override
+# WATCHTOWER_DB_PATH).
 # It is the user's own durable, local capture store — regenerable rollups derive
 # from the raw event/session/snapshot tables.
 
@@ -25,18 +24,7 @@ CC_SCHEMA_VERSION=11
 # A split between them therefore shows up as an empty dashboard rather than as
 # a failure -- WATCHTOWER_DB_PATH shipped to the reader alone and did exactly
 # that.
-#
-# The fresh-machine branch only ever fires where no legacy database exists, so
-# an existing install never moves and TheOneOS keeps reading the file it knows.
-cc_db_path() {
-  if [ -n "${WATCHTOWER_DB_PATH:-}" ]; then printf '%s' "$WATCHTOWER_DB_PATH"; return; fi
-  if [ -n "${THEONE_DB_PATH:-}" ]; then printf '%s' "$THEONE_DB_PATH"; return; fi
-  if [ -f "$HOME/.theone/claude-code-usage.sqlite" ]; then
-    printf '%s' "$HOME/.theone/claude-code-usage.sqlite"
-  else
-    printf '%s' "$HOME/.watchtower/watchtower.sqlite"
-  fi
-}
+cc_db_path() { printf '%s' "${WATCHTOWER_DB_PATH:-$HOME/.watchtower/watchtower.sqlite}"; }
 cc_db_dir()  { dirname "$(cc_db_path)"; }
 cc_now()     { date +%s; }
 
@@ -69,14 +57,14 @@ cat <<'SQL'
 PRAGMA journal_mode=WAL;
 PRAGMA synchronous=NORMAL;
 
--- One row per Claude Code session (session_id == transcript filename UUID ==
--- ccflare clientSessionId). A single terminal sitting may span several ids
+-- One row per Claude Code session (session_id == transcript filename UUID). A
+-- single terminal sitting may span several ids
 -- (each /clear or /compact restart mints a new session_id + SessionStart).
 CREATE TABLE IF NOT EXISTS claude_sessions (
   session_id     TEXT PRIMARY KEY,
-  launch_id      TEXT,            -- correlates to the cc-track.sh launcher run (via THEONE_LAUNCH_ID)
+  launch_id      TEXT,            -- no longer written; kept for older rows
   terminal_app   TEXT,            -- "terax" | "iterm" | "vscode" | ... (best-effort)
-  profile        TEXT,            -- THEONE_PROFILE (e.g. "theone")
+  profile        TEXT,            -- no longer written; kept for older rows
   cwd            TEXT,
   repo           TEXT,
   project_path   TEXT,            -- git toplevel of cwd; NULL = not in a repo
@@ -222,7 +210,7 @@ CREATE TABLE IF NOT EXISTS claude_project_rollups (
 CREATE INDEX IF NOT EXISTS idx_projroll_day ON claude_project_rollups(day);
 
 -- Singleton lifetime rank/XP snapshot (rebuilt by the rollup).
--- DEPRECATED (Stage 5): the 5,000 h ladder. Still written exactly as before, for TheOneOS until its lockstep PR merges; agent_progress replaces it. Not removed in Stage 5.
+-- DEPRECATED (Stage 5): the 5,000 h ladder. Still written exactly as before, because hygiene and lifetime sessions still read it; agent_progress replaces it.
 CREATE TABLE IF NOT EXISTS claude_rank_progress (
   id                   INTEGER PRIMARY KEY CHECK (id = 1),
   total_hours          REAL    DEFAULT 0,
@@ -414,10 +402,10 @@ CREATE TABLE IF NOT EXISTS claude_profile_daily (
 );
 CREATE TABLE IF NOT EXISTS claude_discipline_scores (
   day TEXT NOT NULL,
-  discipline TEXT NOT NULL,               -- 'prompt-hygiene', … TheOne's ids
+  discipline TEXT NOT NULL,               -- 'prompt-hygiene', …
   score INTEGER NOT NULL,                 -- 0–60; 0 when needs-data
   status TEXT NOT NULL,                   -- needs-data | needs-work | ok | strong
-  definition TEXT NOT NULL,               -- 'theone' | 'watchtower'
+  definition TEXT NOT NULL,               -- 'original' | 'watchtower'
   evidence_json TEXT NOT NULL,            -- raw numbers only, e.g. {"slash_kinds":4}
   PRIMARY KEY (day, discipline)
 );
@@ -808,10 +796,9 @@ cc_is_excluded() {
   return 1
 }
 
-# Best-effort terminal app tag. Honors an explicit THEONE_TERMINAL_APP, then the
-# Terax marker your other hooks already use, then TERM_PROGRAM, else "unknown".
+# Best-effort terminal app tag: the Terax marker your other hooks already use,
+# then TERM_PROGRAM, else "unknown".
 cc_terminal_app() {
-  if [ -n "$THEONE_TERMINAL_APP" ]; then printf '%s' "$THEONE_TERMINAL_APP"; return; fi
   if [ -n "$TERAX_TERMINAL" ]; then printf 'terax'; return; fi
   case "$TERM_PROGRAM" in
     iTerm.app) printf 'iterm' ;;

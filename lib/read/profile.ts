@@ -2,7 +2,7 @@
  * The Usage Profile view's reads.
  *
  * Everything scored lives in `claude_profile_daily` and `claude_discipline_scores`
- * (capture/rollup.sh), TheOne's ten-discipline / 600-point / 6-tier model plus its
+ * (capture/rollup.sh): the ten-discipline / 600-point / 6-tier model plus its
  * 3-tier Matrix hygiene score. This file reads those two tables, parses their JSON
  * evidence and groups rows into a day/history shape -- it computes nothing (the
  * "no arithmetic" guard, tests/capture-scripts.test.ts, greps every file under
@@ -45,7 +45,7 @@ export interface DisciplineRow {
   id: DisciplineId;
   score: number;
   status: DisciplineStatus;
-  definition: "theone" | "watchtower";
+  definition: "original" | "watchtower";
   evidence: Record<string, number | string | null>;
 }
 
@@ -168,7 +168,7 @@ function readDisciplines(db: string, day: string): DisciplineRow[] {
     discipline: DisciplineId;
     score: number;
     status: DisciplineStatus;
-    definition: "theone" | "watchtower";
+    definition: "original" | "watchtower";
     evidence_json: string;
   }>(db, `SELECT discipline, score, status, definition, evidence_json FROM claude_discipline_scores WHERE day = ${sqlStr(day)};`);
   const byId = new Map(rows.map((r) => [r.discipline, r]));

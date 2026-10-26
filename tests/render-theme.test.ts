@@ -34,7 +34,7 @@ describe("theme tokens", () => {
   it("names exactly the five themes, amber first", () => {
     expect(THEMES).toEqual(["amber", "claude", "giants", "raptors", "bills"]);
     expect(THEME_LABELS).toEqual({
-      amber: "TheOne amber", claude: "Claude", giants: "SF Giants",
+      amber: "Amber", claude: "Claude", giants: "SF Giants",
       raptors: "Toronto Raptors", bills: "Buffalo Bills",
     });
   });

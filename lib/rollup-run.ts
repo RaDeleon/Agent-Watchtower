@@ -24,7 +24,7 @@ export function runRollup(opts: {
   try {
     execFileSync("bash", [script, "--quiet"], {
       env: {
-        ...env, CC_LIB_PATH: lib, WATCHTOWER_DB_PATH: opts.db, THEONE_DB_PATH: opts.db,
+        ...env, CC_LIB_PATH: lib, WATCHTOWER_DB_PATH: opts.db,
         WATCHTOWER_EXCLUDE_PATHS: opts.excludePaths.join("\n"),
       },
       stdio: ["ignore", "pipe", "pipe"],

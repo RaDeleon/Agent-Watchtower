@@ -20,7 +20,7 @@ function buildAndRoll(scenario: string): string {
     // the two-sessions-one-day scenario would split across two rows in any zone
     // where the fixture's fixed epoch straddles midnight, and the test would
     // pass or fail depending on where it ran.
-    env: { ...process.env, THEONE_DB_PATH: db, CC_LIB_PATH: LIB, TZ: "UTC" },
+    env: { ...process.env, WATCHTOWER_DB_PATH: db, CC_LIB_PATH: LIB, TZ: "UTC" },
     encoding: "utf8",
   });
   return db;

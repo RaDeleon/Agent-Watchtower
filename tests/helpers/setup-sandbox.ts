@@ -35,11 +35,11 @@ async function freePort(): Promise<number> {
   return port;
 }
 
-/** The environment with every Watchtower, TheOneOS and capture override removed. */
+/** The environment with every Watchtower and capture override removed. */
 function cleanEnv(): NodeJS.ProcessEnv {
   const env: NodeJS.ProcessEnv = { ...process.env };
   for (const k of Object.keys(env)) {
-    if (k.startsWith("WATCHTOWER_") || k.startsWith("THEONE_") || k.startsWith("CC_") || k === "CLAUDE_DIR") delete env[k];
+    if (k.startsWith("WATCHTOWER_") || k.startsWith("CC_") || k === "CLAUDE_DIR") delete env[k];
   }
   return env;
 }

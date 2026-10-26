@@ -19,7 +19,7 @@ const skill = (key: string, over: Partial<Level> = {}): Skill =>
   ({ key, label: key, level: lv(over), firstDay: "2026-08-01", lastDay: "2026-09-30" });
 const tool = (over: Partial<ToolCharacter> = {}): ToolCharacter => ({
   source: "codex", label: "Codex", state: { state: "level", level: lv() }, pace: pace(),
-  projects: [skill("TheOneOS")], excludedHidden: false, models: [skill("gpt-5.5")], ...over,
+  projects: [skill("client-refresh")], excludedHidden: false, models: [skill("gpt-5.5")], ...over,
 });
 const up = (i: number, over: Partial<LevelUp> = {}): LevelUp => ({
   day: `2026-09-${String(30 - (i % 28)).padStart(2, "0")}`, source: "codex", kind: "project", key: `k${String(i).padStart(2, "0")}`,
@@ -129,8 +129,8 @@ describe("characterView", () => {
   });
 
   it("names the skill path and the tier change in the level-up log", () => {
-    const h = html(data({ levelUps: [up(0, { label: "TheOneOS", level: 10, tierChanged: true })] }));
-    expect(h).toContain("Codex › project › TheOneOS");
+    const h = html(data({ levelUps: [up(0, { label: "client-refresh", level: 10, tierChanged: true })] }));
+    expect(h).toContain("Codex › project › client-refresh");
     expect(h).toContain("→ Apprentice");
   });
 

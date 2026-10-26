@@ -15,7 +15,7 @@ const MAKE = path.join(ROOT, "tests", "fixtures", "make-fixture.sh");
 /** Run the rollup again over an existing fixture DB, with explicit argv/env. */
 function runRollup(db: string, args: string[], extraEnv: Record<string, string> = {}): void {
   execFileSync("bash", [ROLLUP, ...args], {
-    env: { ...process.env, THEONE_DB_PATH: db, CC_LIB_PATH: LIB, TZ: "UTC", ...extraEnv },
+    env: { ...process.env, WATCHTOWER_DB_PATH: db, CC_LIB_PATH: LIB, TZ: "UTC", ...extraEnv },
     encoding: "utf8",
   });
 }
@@ -78,7 +78,7 @@ describe("the resolution step", () => {
     const before = rows<PathRow>(db, "SELECT project_path FROM claude_project_paths WHERE cwd LIKE '%/repo-a';");
     execFileSync("rm", ["-rf", String(rows<{ cwd: string }>(db, "SELECT cwd FROM claude_project_paths WHERE cwd LIKE '%/repo-a';")[0].cwd)]);
     execFileSync("bash", [ROLLUP, "--quiet"], {
-      env: { ...process.env, THEONE_DB_PATH: db, CC_LIB_PATH: LIB, TZ: "UTC" },
+      env: { ...process.env, WATCHTOWER_DB_PATH: db, CC_LIB_PATH: LIB, TZ: "UTC" },
       encoding: "utf8",
     });
     const after = rows<PathRow>(db, "SELECT project_path, source FROM claude_project_paths WHERE cwd LIKE '%/repo-a';");
@@ -475,7 +475,7 @@ describe("per-project rollups reconcile with the daily rollups", () => {
   // the same class of error as the 63x/201x status-line token figures this
   // stage exists to remove. NULL is also skipped by AVG(), where a fabricated
   // 0.0 would drag the average down. Both columns are nullable from here on and
-  // TheOneOS must treat them as such; rollup.sh says so at the site.
+  // every reader must treat them as such; rollup.sh says so at the site.
   it("leaves the context percentages NULL, not 0.0, on a day with no sessions", () => {
     const db = buildAndRoll("tokens-only-day");
     const got = rows<{ avg_context_pct: number | null; peak_context_pct: number | null }>(db,

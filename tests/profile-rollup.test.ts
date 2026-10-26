@@ -34,7 +34,7 @@ function day(db: string, d: string): ProfileRow | undefined {
 }
 
 describe("Stage 4A profile: windows, session stats, the Matrix score", () => {
-  it("scores a single day from two sessions, TheOne's exact arithmetic order (spec 4.2/4.3)", () => {
+  it("scores a single day from two sessions, in the exact arithmetic order of spec 4.2/4.3", () => {
     // session A: 12 requests, cache_read 205000/each, in 10, out 90
     // session B:  8 requests, cache_read  20000/each, in 10, out 90
     // median ctx  = (205000+20000)/2 = 112500
@@ -197,7 +197,7 @@ describe("Stage 4A profile: windows, session stats, the Matrix score", () => {
 // ---------------------------------------------------------------------------
 // Task 3: the ten disciplines, the 600 total, the ladder (spec 4.2, 4.4-4.6).
 // Every expected number below is hand arithmetic over the fixture, written out
-// in the comments with TheOne's helpers:
+// in the comments with the spec's helpers:
 //   H(v, lo, hi)    = v <= lo -> 0,   v >= hi  -> 100, else round(100*((v-lo)/(hi-lo)))
 //   L(v, good, bad) = v <= good -> 100, v >= bad -> 0, else round(100*(1-(v-good)/(bad-good)))
 //   clamp(v) to [0, 100]; a discipline = mean of its DEFINED parts;
@@ -234,7 +234,7 @@ describe("Stage 4A profile: the ten disciplines, the total and the ladder", () =
     const d = disciplines(db, "2026-09-10");
     expect(Object.keys(d).sort()).toEqual([...IDS].sort());
     for (const id of IDS) {
-      const want = id === "automation" || id === "security" ? "watchtower" : "theone";
+      const want = id === "automation" || id === "security" ? "watchtower" : "original";
       expect(`${id}: ${d[id].definition}`).toBe(`${id}: ${want}`);
     }
 
@@ -392,13 +392,13 @@ describe("Stage 4A profile: the ten disciplines, the total and the ladder", () =
     expect(Object.keys(d).sort()).toEqual([...IDS].sort());
 
     // prompt-hygiene, verification, reuse: every part is tool-derived -> needs-data, 0
-    expect(d["prompt-hygiene"]).toEqual({ score: 0, status: "needs-data", definition: "theone", evidence: { slash_kinds: null } });
+    expect(d["prompt-hygiene"]).toEqual({ score: 0, status: "needs-data", definition: "original", evidence: { slash_kinds: null } });
     expect(d.verification).toEqual({
-      score: 0, status: "needs-data", definition: "theone",
+      score: 0, status: "needs-data", definition: "original",
       evidence: { tool_calls: null, inspect_share: null, tool_error_rate: null },
     });
     expect(d.reuse).toEqual({
-      score: 0, status: "needs-data", definition: "theone",
+      score: 0, status: "needs-data", definition: "original",
       evidence: { slash_max_repeat: null, top_command: null, mcp_servers: null },
     });
     // automation: runs = 2 headless sessions ONLY (no subagent part without
@@ -407,7 +407,7 @@ describe("Stage 4A profile: the ten disciplines, the total and the ladder", () =
     expect(d.automation).toMatchObject({ score: 24, status: "needs-work" });
     expect(d.automation.evidence).toEqual({ headless_sessions: 2, subagent_launches: null, mcp_calls: null });
     // output-quality from success ONLY: 20/21 -> H(0.9524, 0.9, 1) = round(52.38) = 52
-    //   -> round(31.2) = 31, ok (TheOne's tool-error part of 100 would give 46)
+    //   -> round(31.2) = 31, ok (a tool-error part of 100 would give 46)
     expect(d["output-quality"]).toMatchObject({ score: 31, status: "ok" });
     expect(d["output-quality"].evidence).toMatchObject({ requests: 21, api_errors: 1, tool_error_rate: null });
     expect(d["output-quality"].evidence.success).toBeCloseTo(20 / 21, 12);
@@ -433,17 +433,17 @@ describe("Stage 4A profile: the ten disciplines, the total and the ladder", () =
     const db = buildAndRoll("profile-zero-tools");
     expect(day(db, "2026-09-10")!.tool_covered).toBe(1);
     const d = disciplines(db, "2026-09-10");
-    // TheOne sets the tool-error rate to 0 when there are no calls, which
-    // scores L(0) = 100. Here both verification parts are undefined.
+    // With no calls the tool-error rate is undefined, not 0 (which would
+    // score L(0) = 100). Here both verification parts are undefined.
     expect(d.verification).toEqual({
-      score: 0, status: "needs-data", definition: "theone",
+      score: 0, status: "needs-data", definition: "original",
       evidence: { tool_calls: 0, inspect_share: null, tool_error_rate: null },
     });
     // output-quality: success 19/20 -> H(0.95) = 50 -> 30, ok; the undefined
-    //   error part is left out (TheOne: mean(50, 100) = 75 -> 45).
+    //   error part is left out (counting it as 100 would give mean(50, 100) = 75 -> 45).
     expect(d["output-quality"]).toMatchObject({ score: 30, status: "ok" });
     expect(d["output-quality"].evidence).toEqual({ requests: 20, api_errors: 1, success: 0.95, tool_error_rate: null });
-    // Covered with nothing in it is a MEASURED zero, as in TheOne: 0 slash kinds
+    // Covered with nothing in it is a MEASURED zero: 0 slash kinds
     // and 0 repeats / 0 servers score 0, needs-work -- not needs-data.
     expect(d["prompt-hygiene"]).toMatchObject({ score: 0, status: "needs-work", evidence: { slash_kinds: 0 } });
     expect(d.reuse).toMatchObject({
@@ -541,7 +541,7 @@ describe("Stage 4A profile: the ten disciplines, the total and the ladder", () =
     // mean(sessionLength 100, compaction 90) = 95 -> round(57.0) = 57: the
     // compactions part is left out, not scored as 0 (mean(100, 90, 0) -> 38).
     expect(d["session-hygiene"]).toEqual({
-      score: 57, status: "strong", definition: "theone",
+      score: 57, status: "strong", definition: "original",
       evidence: {
         median_requests: 20, long_sessions: 0, long_with_reset: 0, compactions: null,
         f_session_length: 100, f_compaction: 90, event_covered: 0,
@@ -562,7 +562,7 @@ describe("Stage 4A profile: the ten disciplines, the total and the ladder", () =
     });
     // mean(100, 90, clamp(2 x 20) = 40) = 76.67 -> round(46.0) = 46
     expect(d["session-hygiene"]).toEqual({
-      score: 46, status: "strong", definition: "theone",
+      score: 46, status: "strong", definition: "original",
       evidence: {
         median_requests: 20, long_sessions: 0, long_with_reset: 0, compactions: 2,
         f_session_length: 100, f_compaction: 90, event_covered: 1,
