@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/watchtower-banner.svg" width="960" alt="Agent Watchtower: know your usage, see your progress. Local agent telemetry, levels, quests and attributes.">
+  <img src="docs/assets/watchtower-banner.png" width="100%" alt="Agent Watchtower original illustrated raccoon lookout with conceptual timelines, token stacks and a six-attribute character chart.">
 </p>
 
 <h1 align="center">Agent Watchtower</h1>

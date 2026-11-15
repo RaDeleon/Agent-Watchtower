@@ -25,3 +25,6 @@ coverage/
 .env
 .env.*
 !.env.example
+
+# Private local project records
+/_devlog/
