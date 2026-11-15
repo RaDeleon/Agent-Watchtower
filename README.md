@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/watchtower-banner.png" width="100%" alt="Agent Watchtower original illustrated raccoon lookout with conceptual timelines, token stacks and a six-attribute character chart.">
+  <img src="docs/assets/watchtower-banner.png?title=1" width="100%" alt="Agent Watchtower original illustrated raccoon lookout with conceptual timelines, token stacks and a six-attribute character chart.">
 </p>
 
 <h1 align="center">Agent Watchtower</h1>
